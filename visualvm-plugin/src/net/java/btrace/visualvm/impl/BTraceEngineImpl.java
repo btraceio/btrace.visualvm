@@ -102,13 +102,21 @@ public class BTraceEngineImpl extends BTraceEngine {
         return result;
     }
 
+    final private AtomicBoolean stopping = new AtomicBoolean(false);
     @Override
     public boolean stop(final BTraceTask task) {
-        boolean result = doStop(task);
-        if (result) {
-            fireOnTaskStop(task);
+        try {
+            if (stopping.compareAndSet(false, true)) {
+                boolean result = doStop(task);
+                if (result) {
+                    fireOnTaskStop(task);
+                }
+                return result;
+            }
+            return true;
+        } finally {
+            stopping.set(false);
         }
-        return result;
     }
 
     private boolean doStart(BTraceTask task) {
@@ -200,13 +208,16 @@ public class BTraceEngineImpl extends BTraceEngine {
         Client client = clientMap.get(task);
         if (client != null) {
             try {
+                client.sendExit(0);
+                Thread.sleep(300);
                 client.close();
-                return true;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
-        return false;
+        return true;
     }
 
     public boolean supports(DataSource ds) {
