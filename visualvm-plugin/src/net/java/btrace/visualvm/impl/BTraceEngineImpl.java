@@ -214,7 +214,7 @@ public class BTraceEngineImpl extends BTraceEngine {
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
+                // ignore all IO related exception during the stop sequence
             }
         }
         return true;
