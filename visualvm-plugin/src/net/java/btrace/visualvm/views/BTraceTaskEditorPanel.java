@@ -41,6 +41,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -60,6 +62,8 @@ import org.openide.util.Exceptions;
  * @author Jaroslav Bachorik <jaroslav.bachorik@sun.com>
  */
 public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateListener {
+    final private static Logger LOGGER = Logger.getLogger(BTraceTaskEditorPanel.class.getName());
+
     final private static String SCRIPT_TEMPLATE = "/* BTrace Script Template */\n" +
             "import com.sun.btrace.annotations.*;\n" +
             "import static com.sun.btrace.BTraceUtils.*;\n\n" +
@@ -128,6 +132,7 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
 
     @Override
     public void stateChanged(BTraceTask.State state) {
+        LOGGER.log(Level.FINEST, "BTrace task state changed to {0}", state);
         switch (state) {
             case FINISHED:
             case NEW: {

@@ -47,6 +47,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.java.btrace.visualvm.api.BTraceEngine;
 import net.java.btrace.visualvm.api.BTraceTask;
 import net.java.btrace.visualvm.compiler.BCompiler;
@@ -60,6 +62,8 @@ import org.openide.util.RequestProcessor;
  * @author Jaroslav Bachorik
  */
 public class BTraceEngineImpl extends BTraceEngine {
+    final private static Logger LOGGER = Logger.getLogger(BTraceEngineImpl.class.getName());
+
     private String clientPath;
     private String agentPath;
     private Map<BTraceTask, Client> clientMap = new HashMap<BTraceTask, Client>();
@@ -95,7 +99,10 @@ public class BTraceEngineImpl extends BTraceEngine {
 
     @Override
     public boolean start(final BTraceTask task) {
+        LOGGER.finest("Starting BTrace task");
+
         boolean result = doStart(task);
+        LOGGER.log(Level.FINEST, "BTrace task {0}", result ? "started successfuly" : "failed");
         if (result) {
             fireOnTaskStart(task);
         }
@@ -105,9 +112,12 @@ public class BTraceEngineImpl extends BTraceEngine {
     final private AtomicBoolean stopping = new AtomicBoolean(false);
     @Override
     public boolean stop(final BTraceTask task) {
+        LOGGER.finest("Attempting to stop BTrace task");
         try {
             if (stopping.compareAndSet(false, true)) {
+                LOGGER.finest("Stopping BTrace task");
                 boolean result = doStop(task);
+                LOGGER.log(Level.FINEST, "BTrace task {0}", result ? "stopped successfuly" : "not stopped");
                 if (result) {
                     fireOnTaskStop(task);
                 }
@@ -126,22 +136,26 @@ public class BTraceEngineImpl extends BTraceEngine {
             final CountDownLatch latch = new CountDownLatch(1);
             final Application app = task.getApplication();
             final String toolsJarCp = findToolsJarPath(app);
+            LOGGER.log(Level.FINEST, "tools.jar located at {0}", toolsJarCp);
             BCompiler compiler = new BCompiler(clientPath, toolsJarCp);
             final byte[] bytecode = compiler.compile(btrace.getScript(), "", btrace.getWriter());
+            LOGGER.log(Level.FINEST, "Compiled the trace: {0} bytes", bytecode.length);
             RequestProcessor.getDefault().post(new Runnable() {
 
                 public void run() {
                     String portStr = JvmFactory.getJVMFor(app).getSystemProperties().getProperty("btrace.port"); // I
-
+                    LOGGER.log(Level.FINEST, "BTrace agent listening on port {0}", portStr);
                     final PrintWriter pw = new PrintWriter(btrace.getWriter());
                     Client existingClient = clientMap.get(btrace);
                     final Client client = existingClient != null ? existingClient : new Client(portStr != null ? Integer.parseInt(portStr) : findFreePort(), ".", BTraceSettings.sharedInstance().isDebugMode(), false,  BTraceSettings.sharedInstance().isDumpClasses(), BTraceSettings.sharedInstance().getDumpClassPath());
                     
                     try {
                         client.attach(String.valueOf(app.getPid()), agentPath, toolsJarCp, null);
+                        Thread.sleep(200); // give the server side time to initialize and open the port
                         client.submit(bytecode, new String[]{}, new CommandListener() {
 
                             public void onCommand(Command cmd) throws IOException {
+                                LOGGER.log(Level.FINEST, "Received command: {0}", cmd.toString());
                                 switch (cmd.getType()) {
                                     case Command.SUCCESS: {
                                         pw.println("BTrace code successfuly deployed");
@@ -188,8 +202,16 @@ public class BTraceEngineImpl extends BTraceEngine {
                             }
                         });
                     } catch (IOException iOException) {
+                        LOGGER.log(Level.FINE, "Error connecting to target VM", iOException);
+                        result.set(false);
                         latch.countDown();
                     } catch (UnsupportedOperationException unsupportedOperationException) {
+                        LOGGER.log(Level.FINE, unsupportedOperationException.getLocalizedMessage(), unsupportedOperationException);
+                        result.set(false);
+                        latch.countDown();
+                    } catch (InterruptedException e) {
+                        LOGGER.log(Level.FINE, "Operation interrupted", e);
+                        result.set(false);
                         latch.countDown();
                     }
                 }
