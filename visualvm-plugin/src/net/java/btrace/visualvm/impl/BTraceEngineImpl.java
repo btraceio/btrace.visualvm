@@ -201,16 +201,8 @@ public class BTraceEngineImpl extends BTraceEngine {
                                 btrace.dispatchCommand(cmd);
                             }
                         });
-                    } catch (IOException iOException) {
-                        LOGGER.log(Level.FINE, "Error connecting to target VM", iOException);
-                        result.set(false);
-                        latch.countDown();
-                    } catch (UnsupportedOperationException unsupportedOperationException) {
-                        LOGGER.log(Level.FINE, unsupportedOperationException.getLocalizedMessage(), unsupportedOperationException);
-                        result.set(false);
-                        latch.countDown();
-                    } catch (InterruptedException e) {
-                        LOGGER.log(Level.FINE, "Operation interrupted", e);
+                    } catch (Exception e) {
+                        LOGGER.log(Level.FINE, e.getLocalizedMessage(), e);
                         result.set(false);
                         latch.countDown();
                     }
