@@ -26,6 +26,7 @@ package net.java.btrace.visualvm.impl;
 
 import com.sun.btrace.comm.Command;
 import com.sun.tools.visualvm.application.Application;
+import java.io.File;
 import java.io.PrintWriter;
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
@@ -55,6 +56,8 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
     private PrintWriter consoleWriter = new PrintWriter(System.out, true);
 
     private String script;
+
+    final private Set<String> classPath = new HashSet<String>();
 
     final private WeakReference<Application> appRef;
     final private BTraceEngine engine;
@@ -210,6 +213,28 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
         if (task.equals(this)) {
             setState(State.FINISHED);
         }
+    }
+
+    @Override
+    public void addCPEntry(String cpEntry) {
+        classPath.add(cpEntry);
+    }
+
+    @Override
+    public void removeCPEntry(String cpEntry) {
+        classPath.remove(cpEntry);
+    }
+
+    @Override
+    public String getClassPath() {
+        StringBuilder sb = new StringBuilder();
+        for(String cpEntry : classPath) {
+            if (sb.length() > 0) {
+                sb.append(File.pathSeparator);
+            }
+            sb.append(cpEntry);
+        }
+        return sb.toString();
     }
 
     private void setState(State newValue) {

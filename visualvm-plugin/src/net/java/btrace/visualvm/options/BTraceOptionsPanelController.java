@@ -40,7 +40,7 @@ public class BTraceOptionsPanelController extends OptionsPanelController {
 
     private BTraceCustomizer panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private boolean changed;
+    volatile private boolean changed;
 
     public void update() {
         getPanel().load();

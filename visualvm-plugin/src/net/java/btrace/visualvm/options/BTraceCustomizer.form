@@ -24,11 +24,11 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="dumpCheck" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jSeparator1" alignment="0" pref="345" max="32767" attributes="0"/>
+                  <Component id="jSeparator1" alignment="0" pref="565" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="dumpClassPathLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="dumpClassPath" pref="222" max="32767" attributes="0"/>
+                      <Component id="dumpClassPath" pref="442" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -59,7 +59,7 @@
     <Component class="javax.swing.JLabel" name="dumpClassPathLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="net/java/visualvm/btrace/options/Bundle.properties" key="BTraceCustomizer.dumpClassPathLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="net/java/btrace/visualvm/options/Bundle.properties" key="BTraceCustomizer.dumpClassPathLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
@@ -67,7 +67,7 @@
     <Component class="javax.swing.JTextField" name="dumpClassPath">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="net/java/visualvm/btrace/options/Bundle.properties" key="BTraceCustomizer.dumpClassPath.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="net/java/btrace/visualvm/options/Bundle.properties" key="BTraceCustomizer.dumpClassPath.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
@@ -75,7 +75,7 @@
     <Component class="javax.swing.JCheckBox" name="dumpCheck">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="net/java/visualvm/btrace/options/Bundle.properties" key="BTraceCustomizer.dumpCheck.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="net/java/btrace/visualvm/options/Bundle.properties" key="BTraceCustomizer.dumpCheck.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -85,7 +85,7 @@
     <Component class="javax.swing.JCheckBox" name="debugCheck">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="net/java/visualvm/btrace/options/Bundle.properties" key="BTraceCustomizer.debugCheck.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="net/java/btrace/visualvm/options/Bundle.properties" key="BTraceCustomizer.debugCheck.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>

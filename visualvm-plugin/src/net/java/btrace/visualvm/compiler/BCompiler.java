@@ -45,7 +45,7 @@ final public class BCompiler {
 
     Class stringClz;
 
-    private static Pattern classNamePattern = Pattern.compile("@BTrace\\s*.+?\\s*class\\s*(.*?)\\s+\\{", Pattern.MULTILINE | Pattern.DOTALL | Pattern.UNIX_LINES);
+    final private static Pattern classNamePattern = Pattern.compile("@BTrace\\s*.+?\\s*class\\s*(.*?)\\s+\\{", Pattern.MULTILINE | Pattern.DOTALL | Pattern.UNIX_LINES);
 
     public BCompiler(String clientPath, String toolsJarPath) throws InstantiationException {
         this.clientPath = clientPath;

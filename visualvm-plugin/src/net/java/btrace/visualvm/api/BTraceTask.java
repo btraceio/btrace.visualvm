@@ -115,6 +115,12 @@ public abstract class BTraceTask extends DataSource {
      */
     abstract public void setScript(String newValue);
 
+    abstract public void addCPEntry(String cpEntry);
+
+    abstract public void removeCPEntry(String cpEntry);
+
+    abstract public String getClassPath();
+
     /**
      * Property getter
      * @return Returns the bound {@linkplain BTraceEngine} instance

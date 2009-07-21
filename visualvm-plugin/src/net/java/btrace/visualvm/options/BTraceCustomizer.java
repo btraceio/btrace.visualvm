@@ -84,11 +84,11 @@ public class BTraceCustomizer extends javax.swing.JPanel {
                         .addComponent(debugCheck)
                         .addGap(18, 18, 18)
                         .addComponent(dumpCheck))
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 565, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(dumpClassPathLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dumpClassPath, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)))
+                        .addComponent(dumpClassPath, javax.swing.GroupLayout.DEFAULT_SIZE, 442, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -109,13 +109,7 @@ public class BTraceCustomizer extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void dumpCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dumpCheckActionPerformed
-        if (dumpCheck.isSelected()) {
-            dumpClassPath.setEnabled(true);
-            dumpClassPathLabel.setEnabled(true);
-        } else {
-            dumpClassPath.setEnabled(false);
-            dumpClassPathLabel.setEnabled(false);
-        }
+        updateEnablement();
     }//GEN-LAST:event_dumpCheckActionPerformed
 
 
@@ -131,6 +125,7 @@ public class BTraceCustomizer extends javax.swing.JPanel {
         debugCheck.setSelected(BTraceSettings.sharedInstance().isDebugMode());
         dumpCheck.setSelected(BTraceSettings.sharedInstance().isDumpClasses());
         dumpClassPath.setText(BTraceSettings.sharedInstance().getDumpClassPath());
+        updateEnablement();
     }
 
     synchronized void store() {
@@ -145,5 +140,15 @@ public class BTraceCustomizer extends javax.swing.JPanel {
 
     boolean valid() {
         return false;
+    }
+
+    private void updateEnablement() {
+        if (dumpCheck.isSelected()) {
+            dumpClassPath.setEnabled(true);
+            dumpClassPathLabel.setEnabled(true);
+        } else {
+            dumpClassPath.setEnabled(false);
+            dumpClassPathLabel.setEnabled(false);
+        }
     }
 }

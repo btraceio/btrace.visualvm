@@ -138,7 +138,7 @@ public class BTraceEngineImpl extends BTraceEngine {
             final String toolsJarCp = findToolsJarPath(app);
             LOGGER.log(Level.FINEST, "tools.jar located at {0}", toolsJarCp);
             BCompiler compiler = new BCompiler(clientPath, toolsJarCp);
-            final byte[] bytecode = compiler.compile(btrace.getScript(), "", btrace.getWriter());
+            final byte[] bytecode = compiler.compile(btrace.getScript(), task.getClassPath(), btrace.getWriter());
             LOGGER.log(Level.FINEST, "Compiled the trace: {0} bytes", bytecode.length);
             RequestProcessor.getDefault().post(new Runnable() {
 

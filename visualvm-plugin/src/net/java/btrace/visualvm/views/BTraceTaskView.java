@@ -11,6 +11,7 @@ import com.sun.tools.visualvm.core.ui.components.DataViewComponent;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import net.java.btrace.visualvm.api.BTraceTask;
+import net.java.btrace.visualvm.views.classpath.BTraceClassPathPanel;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.RequestProcessor;
@@ -35,10 +36,13 @@ public class BTraceTaskView extends DataSourceView {
 
 
         final OutputPane output = new OutputPane();
+        final BTraceClassPathPanel cpPanel = new BTraceClassPathPanel(task);
 
+        dvc.addDetailsView(new DataViewComponent.DetailsView("Class-Path", "Class-Path", POSITION_AT_THE_END, cpPanel, null), DataViewComponent.BOTTOM_RIGHT);
         dvc.addDetailsView(new DataViewComponent.DetailsView("Output", "Output", POSITION_LAST, output, null), DataViewComponent.BOTTOM_LEFT);
 
         dvc.hideDetailsArea(DataViewComponent.BOTTOM_LEFT);
+        dvc.hideDetailsArea(DataViewComponent.BOTTOM_RIGHT);
 
         // Workaround to force correct initial appearance
         try {
