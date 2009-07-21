@@ -13,6 +13,7 @@ package net.java.btrace.visualvm.views.classpath;
 
 import java.io.File;
 import java.util.Enumeration;
+import java.util.StringTokenizer;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
@@ -31,6 +32,7 @@ public class BTraceClassPathPanel extends javax.swing.JPanel {
     public BTraceClassPathPanel(BTraceTask task) {
         initComponents();
         this.task = task;
+        customInitComponents();
     }
 
     /** This method is called from within the constructor to
@@ -189,5 +191,13 @@ public class BTraceClassPathPanel extends javax.swing.JPanel {
 
     public Enumeration getCPEnumeration() {
         return ((DefaultListModel)cpList.getModel()).elements();
+    }
+
+    private void customInitComponents() {
+        DefaultListModel model = (DefaultListModel)cpList.getModel();
+        StringTokenizer st = new StringTokenizer(task.getClassPath(), File.pathSeparator);
+        while (st.hasMoreTokens()) {
+            model.addElement(st.nextToken());
+        }
     }
 }

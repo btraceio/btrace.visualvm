@@ -41,7 +41,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Enumeration;
+import java.util.Properties;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -354,13 +356,15 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
         });
         int result = chooser.showSaveDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
-            lastSavePath = chooser.getSelectedFile().getParent();
+            File script = chooser.getSelectedFile();
+            lastSavePath = script.getParent();
             BTraceSettings.sharedInstance().setLastScriptPath(chooser.getSelectedFile().getAbsolutePath());
 
             BufferedWriter bw = null;
             try {
                 bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(chooser.getSelectedFile())));
                 bw.write(scriptEditor.getText(), 0, scriptEditor.getText().length());
+                saveMetadata(script);
             } catch (IOException iOException) {
                 // TODO
                 iOException.printStackTrace();
@@ -394,7 +398,7 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
     private void loadScript(File script) throws IOException {
         lastOpenPath = script.getParent();
         BTraceSettings.sharedInstance().setLastScriptPath(script.getAbsolutePath());
-        
+
         char[] buffer = new char[2048];
         StringBuilder sb = new StringBuilder();
         int readCount = -1;
@@ -407,6 +411,7 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
                     sb.append(buffer, 0, readCount);
                 }
             } while (readCount > -1);
+            loadMetadata(script);
             scriptEditor.setText(sb.toString());
         } finally {
             if (br != null) {
@@ -416,6 +421,37 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
                     // ignore
                 }
             }
+        }
+    }
+
+    private void loadMetadata(File script) {
+        String metadata = script.getAbsolutePath().replace(".java", ".btmeta");
+
+        Properties p = new Properties();
+
+        try {
+            p.load(new InputStreamReader(new FileInputStream(metadata)));
+
+            String classPath = p.getProperty("class-path", "");
+            StringTokenizer st = new StringTokenizer(classPath, File.pathSeparator);
+            while (st.hasMoreTokens()) {
+                task.addCPEntry(st.nextToken());
+            }
+        } catch (IOException iOException) {
+            // ignore; simply don't add a custom classpath as it doesn't exist
+        }
+    }
+
+    private void saveMetadata(File script) {
+        String metadata = script.getAbsolutePath().replace(".java", ".btmeta");
+
+        Properties p = new Properties();
+
+        try {
+            p.setProperty("class-path", task.getClassPath());
+            p.store(new OutputStreamWriter(new FileOutputStream(metadata)), "BTrace metadata");
+        } catch (IOException iOException) {
+            // ignore; simply don't add a custom classpath as it doesn't exist
         }
     }
 }
