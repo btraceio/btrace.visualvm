@@ -31,6 +31,7 @@ import java.io.PrintWriter;
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,6 +59,7 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
     private String script;
 
     final private Set<String> classPath = new HashSet<String>();
+    final private AtomicBoolean unsafeFlag = new AtomicBoolean();
 
     final private WeakReference<Application> appRef;
     final private BTraceEngine engine;
@@ -235,6 +237,16 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
             sb.append(cpEntry);
         }
         return sb.toString();
+    }
+
+    @Override
+    public boolean isUnsafe() {
+        return unsafeFlag.get();
+    }
+
+    @Override
+    public void setUnsafe(boolean value) {
+        unsafeFlag.set(value);
     }
 
     private void setState(State newValue) {

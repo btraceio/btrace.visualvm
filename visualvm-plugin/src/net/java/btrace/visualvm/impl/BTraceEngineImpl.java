@@ -137,7 +137,7 @@ public class BTraceEngineImpl extends BTraceEngine {
             final Application app = task.getApplication();
             final String toolsJarCp = findToolsJarPath(app);
             LOGGER.log(Level.FINEST, "tools.jar located at {0}", toolsJarCp);
-            BCompiler compiler = new BCompiler(clientPath, toolsJarCp);
+            BCompiler compiler = new BCompiler(btrace.isUnsafe(), clientPath, toolsJarCp);
             final byte[] bytecode = compiler.compile(btrace.getScript(), task.getClassPath(), btrace.getWriter());
             LOGGER.log(Level.FINEST, "Compiled the trace: {0} bytes", bytecode.length);
             RequestProcessor.getDefault().post(new Runnable() {
@@ -147,7 +147,7 @@ public class BTraceEngineImpl extends BTraceEngine {
                     LOGGER.log(Level.FINEST, "BTrace agent listening on port {0}", portStr);
                     final PrintWriter pw = new PrintWriter(btrace.getWriter());
                     Client existingClient = clientMap.get(btrace);
-                    final Client client = existingClient != null ? existingClient : new Client(portStr != null ? Integer.parseInt(portStr) : findFreePort(), ".", BTraceSettings.sharedInstance().isDebugMode(), false,  BTraceSettings.sharedInstance().isDumpClasses(), BTraceSettings.sharedInstance().getDumpClassPath());
+                    final Client client = existingClient != null ? existingClient : new Client(portStr != null ? Integer.parseInt(portStr) : findFreePort(), ".", BTraceSettings.sharedInstance().isDebugMode(), btrace.isUnsafe(),  BTraceSettings.sharedInstance().isDumpClasses(), BTraceSettings.sharedInstance().getDumpClassPath());
                     
                     try {
                         client.attach(String.valueOf(app.getPid()), agentPath, toolsJarCp, null);

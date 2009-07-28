@@ -47,7 +47,7 @@ final public class BCompiler {
 
     final private static Pattern classNamePattern = Pattern.compile("@BTrace\\s*.+?\\s*class\\s*(.*?)\\s+\\{", Pattern.MULTILINE | Pattern.DOTALL | Pattern.UNIX_LINES);
 
-    public BCompiler(String clientPath, String toolsJarPath) throws InstantiationException {
+    public BCompiler(boolean unsafe, String clientPath, String toolsJarPath) throws InstantiationException {
         this.clientPath = clientPath;
         this.toolsJarPath = toolsJarPath;
         
@@ -58,8 +58,8 @@ final public class BCompiler {
             Thread.currentThread().setContextClassLoader(cl);
 
             Class compilerClz = cl.loadClass("com.sun.btrace.compiler.Compiler");
-            Constructor compilerNew = compilerClz.getConstructor();
-            compilerDelegate = compilerNew.newInstance();
+            Constructor compilerNew = compilerClz.getConstructor(String.class, boolean.class);
+            compilerDelegate = compilerNew.newInstance(null, unsafe);
             compileMethod = compilerClz.getMethod("compile", String.class, String.class, Writer.class, String.class, String.class);
         } catch (Exception e) {
             throw new InstantiationException(e.getMessage());

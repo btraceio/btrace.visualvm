@@ -121,6 +121,9 @@ public abstract class BTraceTask extends DataSource {
 
     abstract public String getClassPath();
 
+    abstract public void setUnsafe(boolean value);
+    abstract public boolean isUnsafe();
+
     /**
      * Property getter
      * @return Returns the bound {@linkplain BTraceEngine} instance

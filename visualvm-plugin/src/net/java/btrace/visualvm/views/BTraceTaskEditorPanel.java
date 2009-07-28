@@ -31,6 +31,9 @@
 
 package net.java.btrace.visualvm.views;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -40,13 +43,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
@@ -114,12 +117,16 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
     synchronized private void initializeEditor() {
         boolean initialized = false;
 
+        scriptEditor.setContentType("text/java");
+
         scriptEditor.getDocument().addDocumentListener(documentListener);
 
         if (scriptEditor.getText().isEmpty()) {
             if (BTraceSettings.sharedInstance().getLastScriptPath() != null) {
                 try {
                     loadScript(new File(BTraceSettings.sharedInstance().getLastScriptPath()));
+                    unsafeCheck.setSelected(task.isUnsafe());
+                    updateUnsafeCheck();
                     initialized = true;
                 } catch (FileNotFoundException ex) {
                     // ignore
@@ -173,7 +180,7 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
         jScrollPane1 = new javax.swing.JScrollPane();
         scriptEditor = new javax.swing.JEditorPane();
         scriptEditor.getDocument().addDocumentListener(documentListener);
-        editorToolBar = new javax.swing.JToolBar();
+        toolBar = new javax.swing.JToolBar();
         openScript = new javax.swing.JButton();
         saveScript = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
@@ -181,6 +188,20 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
         btnStop = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         btnEvent = new javax.swing.JButton();
+        toolBarSeparator = new javax.swing.JPanel(new FlowLayout(FlowLayout.LEADING, 0,0)) {
+            public Dimension getPreferredSize() {
+                if (isGTKLookAndFeel() || isNimbusLookAndFeel()) {
+                    int currentWidth = toolBar.getSize().width;
+                    int minimumWidth = toolBar.getMinimumSize().width;
+                    int extraWidth = currentWidth - minimumWidth;
+                    return new Dimension(Math.max(extraWidth, 0), 0);
+                } else {
+                    return super.getPreferredSize();
+                }
+            }
+        }
+        ;
+        unsafeCheck = new javax.swing.JCheckBox();
 
         setBackground(javax.swing.UIManager.getDefaults().getColor("EditorPane.background"));
         setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
@@ -192,13 +213,17 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
 
         scriptEditor.setBackground(javax.swing.UIManager.getDefaults().getColor("EditorPane.background"));
         scriptEditor.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        scriptEditor.setContentType(org.openide.util.NbBundle.getMessage(BTraceTaskEditorPanel.class, "BTraceTaskEditorPanel.scriptEditor.contentType")); // NOI18N
-        scriptEditor.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
+        scriptEditor.setMaximumSize(new java.awt.Dimension(800, 600));
+        scriptEditor.setMinimumSize(new java.awt.Dimension(200, 100));
+        scriptEditor.setOpaque(false);
+        scriptEditor.setPreferredSize(new java.awt.Dimension(200, 100));
         jScrollPane1.setViewportView(scriptEditor);
 
-        editorToolBar.setFloatable(false);
-        editorToolBar.setRollover(true);
-        editorToolBar.setOpaque(false);
+        toolBar.setBorder(null);
+        toolBar.setFloatable(false);
+        toolBar.setRollover(true);
+        toolBar.setBorderPainted(false);
+        toolBar.setOpaque(false);
 
         openScript.setIcon(new javax.swing.ImageIcon(getClass().getResource("/net/java/btrace/visualvm/resources/openFIle.png"))); // NOI18N
         openScript.setMnemonic('o');
@@ -210,7 +235,7 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
                 openScriptActionPerformed(evt);
             }
         });
-        editorToolBar.add(openScript);
+        toolBar.add(openScript);
 
         saveScript.setIcon(new javax.swing.ImageIcon(getClass().getResource("/net/java/btrace/visualvm/resources/saveFile.png"))); // NOI18N
         saveScript.setMnemonic('a');
@@ -222,8 +247,8 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
                 saveScriptActionPerformed(evt);
             }
         });
-        editorToolBar.add(saveScript);
-        editorToolBar.add(jSeparator2);
+        toolBar.add(saveScript);
+        toolBar.add(jSeparator2);
 
         btnStart.setIcon(new javax.swing.ImageIcon(getClass().getResource("/net/java/btrace/visualvm/resources/startScript.png"))); // NOI18N
         btnStart.setMnemonic('S');
@@ -235,7 +260,7 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
                 btnStartActionPerformed(evt);
             }
         });
-        editorToolBar.add(btnStart);
+        toolBar.add(btnStart);
 
         btnStop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/net/java/btrace/visualvm/resources/stopScript.png"))); // NOI18N
         btnStop.setMnemonic('t');
@@ -248,8 +273,8 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
                 btnStopActionPerformed(evt);
             }
         });
-        editorToolBar.add(btnStop);
-        editorToolBar.add(jSeparator1);
+        toolBar.add(btnStop);
+        toolBar.add(jSeparator1);
 
         btnEvent.setIcon(new javax.swing.ImageIcon(getClass().getResource("/net/java/btrace/visualvm/resources/event.png"))); // NOI18N
         btnEvent.setMnemonic('e');
@@ -262,31 +287,37 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
                 btnEventActionPerformed(evt);
             }
         });
-        editorToolBar.add(btnEvent);
+        toolBar.add(btnEvent);
+
+        toolBarSeparator.setOpaque(false);
+        toolBar.add(toolBarSeparator);
+
+        unsafeCheck.setMnemonic('u');
+        unsafeCheck.setText(org.openide.util.NbBundle.getMessage(BTraceTaskEditorPanel.class, "BTraceTaskEditorPanel.unsafeCheck.text")); // NOI18N
+        unsafeCheck.setToolTipText(org.openide.util.NbBundle.getMessage(BTraceTaskEditorPanel.class, "BTraceTaskEditorPanel.unsafeCheck.toolTipText")); // NOI18N
+        unsafeCheck.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        unsafeCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                unsafeCheckActionPerformed(evt);
+            }
+        });
+        toolBar.add(unsafeCheck);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(editorToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1)
+            .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 579, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 579, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(editorToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
-        task.start();
-    }//GEN-LAST:event_btnStartActionPerformed
-
-    private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
-        task.stop();
-    }//GEN-LAST:event_btnStopActionPerformed
 
     private void btnEventActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEventActionPerformed
         Set<String> events = task.getNamedEvents();
@@ -298,7 +329,7 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
             task.sendEvent(events.iterator().next());
             return;
         }
-        
+
         EventChooser chooser = EventChooser.getChooser(task.getNamedEvents(), task.hasAnonymousEvents());
         NotifyDescriptor nd = new DialogDescriptor.Confirmation(chooser, "Select the event to send", NotifyDescriptor.Confirmation.OK_CANCEL_OPTION);
 
@@ -310,33 +341,15 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
                 task.sendEvent();
             }
         }
-    }//GEN-LAST:event_btnEventActionPerformed
+}//GEN-LAST:event_btnEventActionPerformed
 
-    private void openScriptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openScriptActionPerformed
-        JFileChooser chooser = lastOpenPath != null ? new JFileChooser(lastOpenPath) : new JFileChooser();
-        chooser.setMultiSelectionEnabled(false);
-        chooser.setFileFilter(new FileFilter() {
+    private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
+        task.stop();
+}//GEN-LAST:event_btnStopActionPerformed
 
-            @Override
-            public boolean accept(File f) {
-                if (f.isDirectory()) return true;
-                return (f.getName().endsWith(".java"));
-            }
-
-            @Override
-            public String getDescription() {
-                return "BTrace source files (*.java)";
-            }
-        });
-        int result = chooser.showOpenDialog(null);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            try {
-                loadScript(chooser.getSelectedFile());
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-    }//GEN-LAST:event_openScriptActionPerformed
+    private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
+        task.start();
+}//GEN-LAST:event_btnStartActionPerformed
 
     private void saveScriptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveScriptActionPerformed
         JFileChooser chooser = lastSavePath != null ? new JFileChooser(lastSavePath) : new JFileChooser();
@@ -378,20 +391,52 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
                 }
             }
         }
-    }//GEN-LAST:event_saveScriptActionPerformed
+}//GEN-LAST:event_saveScriptActionPerformed
+
+    private void openScriptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openScriptActionPerformed
+        JFileChooser chooser = lastOpenPath != null ? new JFileChooser(lastOpenPath) : new JFileChooser();
+        chooser.setMultiSelectionEnabled(false);
+        chooser.setFileFilter(new FileFilter() {
+
+            @Override
+            public boolean accept(File f) {
+                if (f.isDirectory()) return true;
+                return (f.getName().endsWith(".java"));
+            }
+
+            @Override
+            public String getDescription() {
+                return "BTrace source files (*.java)";
+            }
+        });
+        int result = chooser.showOpenDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            try {
+                loadScript(chooser.getSelectedFile());
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+}//GEN-LAST:event_openScriptActionPerformed
+
+    private void unsafeCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unsafeCheckActionPerformed
+        updateUnsafeCheck();
+    }//GEN-LAST:event_unsafeCheckActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEvent;
     private javax.swing.JButton btnStart;
     private javax.swing.JButton btnStop;
-    private javax.swing.JToolBar editorToolBar;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JButton openScript;
     private javax.swing.JButton saveScript;
     private javax.swing.JEditorPane scriptEditor;
+    private javax.swing.JToolBar toolBar;
+    private javax.swing.JPanel toolBarSeparator;
+    private javax.swing.JCheckBox unsafeCheck;
     // End of variables declaration//GEN-END:variables
 
 
@@ -437,6 +482,8 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
             while (st.hasMoreTokens()) {
                 task.addCPEntry(st.nextToken());
             }
+            boolean unsafe = Boolean.parseBoolean(p.getProperty("unsafe", "false"));
+            task.setUnsafe(unsafe);
         } catch (IOException iOException) {
             // ignore; simply don't add a custom classpath as it doesn't exist
         }
@@ -449,9 +496,31 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
 
         try {
             p.setProperty("class-path", task.getClassPath());
+            p.setProperty("unsafe", Boolean.toString(task.isUnsafe()));
+            
             p.store(new OutputStreamWriter(new FileOutputStream(metadata)), "BTrace metadata");
         } catch (IOException iOException) {
             // ignore; simply don't add a custom classpath as it doesn't exist
         }
+    }
+
+    private static boolean isGTKLookAndFeel() {
+        // is current L&F some kind of GTKLookAndFeel?
+        return UIManager.getLookAndFeel().getID().equals("GTK"); //NOI18N
+    }
+
+    /** Determines if current L&F is Nimbus */
+    private static boolean isNimbusLookAndFeel() {
+        // is current L&F Nimbus?
+        return UIManager.getLookAndFeel().getID().equals("Nimbus"); //NOI18N
+    }
+
+    private void updateUnsafeCheck() {
+        if (unsafeCheck.isSelected()) {
+            unsafeCheck.setForeground(Color.RED);
+        } else {
+            unsafeCheck.setForeground(Color.BLACK);
+        }
+        task.setUnsafe(unsafeCheck.isSelected());
     }
 }
