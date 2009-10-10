@@ -470,7 +470,13 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
     }
 
     private void loadMetadata(File script) {
-        String metadata = script.getAbsolutePath().replace(".java", ".btmeta");
+        String path = script.getAbsolutePath();
+        String metadata = path;
+        if (path.endsWith(".java")) {
+            metadata = path.replace(".java", ".btmeta");
+        } else {
+            metadata = path + ".btmeta";
+        }
 
         Properties p = new Properties();
 
@@ -490,7 +496,13 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
     }
 
     private void saveMetadata(File script) {
-        String metadata = script.getAbsolutePath().replace(".java", ".btmeta");
+        String path = script.getAbsolutePath();
+        String metadata = path;
+        if (path.endsWith(".java")) {
+            metadata = metadata.replace(".java", ".btmeta");
+        } else {
+            metadata = metadata + ".btmeta";
+        }
 
         Properties p = new Properties();
 
