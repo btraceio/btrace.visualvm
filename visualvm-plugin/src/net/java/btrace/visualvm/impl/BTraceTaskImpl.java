@@ -26,11 +26,14 @@ package net.java.btrace.visualvm.impl;
 
 import com.sun.btrace.comm.Command;
 import com.sun.tools.visualvm.application.Application;
+import com.sun.tools.visualvm.application.jvm.Jvm;
+import com.sun.tools.visualvm.application.jvm.JvmFactory;
 import java.io.File;
 import java.io.PrintWriter;
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
@@ -230,6 +233,8 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
     @Override
     public String getClassPath() {
         StringBuilder sb = new StringBuilder();
+        String initCp = getInitClassPath();
+        if (initCp != null) sb.append(initCp);
         for(String cpEntry : classPath) {
             if (sb.length() > 0) {
                 sb.append(File.pathSeparator);
@@ -303,5 +308,21 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
         return hash;
     }
 
-    
+    private String getInitClassPath() {
+        Jvm jvm = JvmFactory.getJVMFor(getApplication());
+        String userDir = jvm.getSystemProperties().getProperty("user.dir", null); // NOI18N
+        String cp = jvm.getSystemProperties().getProperty("java.class.path", ""); // NOI18N
+        StringBuilder initCP = new StringBuilder();
+        if (userDir != null) {
+            StringTokenizer st = new StringTokenizer(cp, File.pathSeparator);
+            while (st.hasMoreTokens()) {
+                String pathElement = st.nextToken();
+                if (initCP.length() > 0) {
+                    initCP.append(File.pathSeparator);
+                }
+                initCP.append(userDir).append(File.separator).append(pathElement);
+            }
+        }
+        return cp.toString();
+    }
 }
