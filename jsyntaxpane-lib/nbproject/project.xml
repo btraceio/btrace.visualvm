@@ -12,10 +12,6 @@
                 <package>jsyntaxpane.syntaxkits</package>
                 <package>jsyntaxpane.util</package>
             </public-packages>
-            <class-path-extension>
-                <runtime-relative-path>ext/jsyntaxpane.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jsyntaxpane.jar</binary-origin>
-            </class-path-extension>
         </data>
     </configuration>
 </project>
