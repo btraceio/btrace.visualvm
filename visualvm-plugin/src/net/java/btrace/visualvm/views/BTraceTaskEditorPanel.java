@@ -53,7 +53,6 @@ import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
-import jsyntaxpane.DefaultSyntaxKit;
 import net.java.btrace.visualvm.ui.components.EventChooser;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -105,7 +104,6 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
 
     /** Creates new form BTraceTaskEditorPanel */
     public BTraceTaskEditorPanel(BTraceTask task) {
-        DefaultSyntaxKit.initKit();
         this.task = task;
         task.addStateListener(this);
 
@@ -117,7 +115,7 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
     synchronized private void initializeEditor() {
         boolean initialized = false;
 
-        scriptEditor.setContentType("text/java");
+        scriptEditor.setContentType("text/x-btrace");
 
         scriptEditor.getDocument().addDocumentListener(documentListener);
 
@@ -213,6 +211,7 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
 
         scriptEditor.setBackground(javax.swing.UIManager.getDefaults().getColor("EditorPane.background"));
         scriptEditor.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        scriptEditor.setContentType(org.openide.util.NbBundle.getMessage(BTraceTaskEditorPanel.class, "BTraceTaskEditorPanel.scriptEditor.contentType")); // NOI18N
         scriptEditor.setMaximumSize(new java.awt.Dimension(800, 600));
         scriptEditor.setMinimumSize(new java.awt.Dimension(200, 100));
         scriptEditor.setOpaque(false);
@@ -307,15 +306,15 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 579, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 579, Short.MAX_VALUE)
+            .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
