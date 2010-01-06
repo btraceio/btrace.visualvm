@@ -78,12 +78,17 @@ public class OutputPane extends JPanel {
                     try {
                         while (!Thread.currentThread().isInterrupted()) {
                             String line = bReader.readLine();
-                            if (line == null) break;
+                            if (line == null) {
+                                Thread.sleep(1000);
+                                continue;
+                            }
                             textArea.append(line + "\n");
                             textArea.setCaretPosition(textArea.getText().length());
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
                     }
                 }
             });
