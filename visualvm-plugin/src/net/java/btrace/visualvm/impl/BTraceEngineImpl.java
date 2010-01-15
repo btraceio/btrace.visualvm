@@ -34,6 +34,7 @@ import com.sun.btrace.comm.MessageCommand;
 import com.sun.btrace.comm.NumberMapDataCommand;
 import com.sun.btrace.comm.StringMapDataCommand;
 import com.sun.tools.visualvm.application.Application;
+import com.sun.tools.visualvm.application.jvm.Jvm;
 import com.sun.tools.visualvm.application.jvm.JvmFactory;
 import com.sun.tools.visualvm.core.datasource.DataSource;
 import java.io.File;
@@ -80,6 +81,10 @@ public class BTraceEngineImpl extends BTraceEngine {
 
     @Override
     public BTraceTask createTask(Application app) {
+        if (!app.isLocalApplication()) return null;
+        Jvm jvm = JvmFactory.getJVMFor(app);
+        if (!jvm.isAttachable() || !jvm.isGetSystemPropertiesSupported()) return null;
+        
         return new BTraceTaskImpl(app, this);
     }
 

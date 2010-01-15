@@ -67,6 +67,7 @@ public abstract class BTraceEngine {
      * Abstract factory method for {@linkplain BTraceTask} instances
      * @param app The application to create the task form
      * @return Returns a {@linkplain BTraceTask} instance bound to the particular {@linkplain Application}
+     *         or null if it is not possible to run BTrace against the application
      */
     abstract public BTraceTask createTask(Application app);
 
