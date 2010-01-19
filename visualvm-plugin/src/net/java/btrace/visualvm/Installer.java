@@ -25,7 +25,9 @@
 package net.java.btrace.visualvm;
 
 
+import com.sun.tools.visualvm.application.views.ApplicationViewsSupport;
 import net.java.btrace.visualvm.impl.BTraceTaskDescriptorProvider;
+import net.java.btrace.visualvm.views.BTraceOutputOverview;
 import net.java.btrace.visualvm.views.BTraceTaskViewProvider;
 import org.openide.modules.ModuleInstall;
 
@@ -38,12 +40,14 @@ public class Installer extends ModuleInstall {
     public void restored() {
         BTraceTaskViewProvider.initialize();
         BTraceTaskDescriptorProvider.initialize();
+        ApplicationViewsSupport.sharedInstance().getOverviewView().registerPluginProvider(new BTraceOutputOverview.Provider());
     }
 
     @Override
     public void uninstalled() {
         BTraceTaskViewProvider.shutdown();
         BTraceTaskDescriptorProvider.shutdown();
+        ApplicationViewsSupport.sharedInstance().getOverviewView().unregisterPluginProvider(new BTraceOutputOverview.Provider());
         super.uninstalled();
     }
 }
