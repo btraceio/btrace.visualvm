@@ -44,8 +44,10 @@ import javax.swing.JLabel;
  */
 public class BTraceOutputOverview extends DataSourceViewPlugin {
     private static String getBTraceOutput(Application app) {
+        if (app.getState() != Application.STATE_AVAILABLE) return null;
+        
         Jvm jvm = JvmFactory.getJVMFor(app);
-        return jvm.isGetSystemPropertiesSupported() ? jvm.getSystemProperties().getProperty("btrace.output") : null;
+        return (jvm != null && jvm.isGetSystemPropertiesSupported()) ? jvm.getSystemProperties().getProperty("btrace.output") : null;
     }
 
     public BTraceOutputOverview(Application app) {
