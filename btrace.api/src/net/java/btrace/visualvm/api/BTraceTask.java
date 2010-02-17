@@ -61,8 +61,7 @@ public abstract class BTraceTask extends DataSource {
      * This enum represents the allowed states of the tracing task
      */
     public static enum State {
-
-        NEW, STARTING, RUNNING, FINISHED
+        NEW, STARTING, COMPILING, COMPILED, INSTRUMENTING, RUNNING, FINISHED
     }
 
     public BTraceTask(Application master) {
@@ -121,7 +120,6 @@ public abstract class BTraceTask extends DataSource {
 
     abstract public String getClassPath();
 
-    abstract public void setUnsafe(boolean value);
     abstract public boolean isUnsafe();
 
     /**
@@ -174,4 +172,6 @@ public abstract class BTraceTask extends DataSource {
      * @return Returns true if the script has defined at least one @OnEvent probe
      */
     abstract public boolean hasEvents();
+
+    abstract public int getInstrClasses();
 }

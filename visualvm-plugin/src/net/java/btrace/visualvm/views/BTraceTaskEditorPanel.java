@@ -48,6 +48,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
@@ -59,8 +60,8 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import net.java.btrace.visualvm.api.BTraceTask;
 import net.java.btrace.visualvm.api.BTraceTask.StateListener;
-import net.java.btrace.visualvm.options.BTraceSettings;
 import org.openide.util.Exceptions;
+import org.openide.util.NbPreferences;
 
 /**
  *
@@ -69,6 +70,8 @@ import org.openide.util.Exceptions;
 public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateListener {
     final private static Logger LOGGER = Logger.getLogger(BTraceTaskEditorPanel.class.getName());
 
+    final private static String EDITOR_LAST_SCRIPT = "editor.lastOpened";
+
     final private static String SCRIPT_TEMPLATE = "/* BTrace Script Template */\n" +
             "import com.sun.btrace.annotations.*;\n" +
             "import static com.sun.btrace.BTraceUtils.*;\n\n" +
@@ -76,6 +79,8 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
             "public class TracingScript {\n" +
             "\t/* put your code here */\n" +
             "}";
+
+    final private Preferences prefs = NbPreferences.forModule(BTraceTaskEditorPanel.class);
 
     private String lastOpenPath = null;
     private String lastSavePath = null;
@@ -120,9 +125,9 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
         scriptEditor.getDocument().addDocumentListener(documentListener);
 
         if (scriptEditor.getText().isEmpty()) {
-            if (BTraceSettings.sharedInstance().getLastScriptPath() != null) {
+            if (getLastScriptPath() != null) {
                 try {
-                    loadScript(new File(BTraceSettings.sharedInstance().getLastScriptPath()));
+                    loadScript(new File(getLastScriptPath()));
                     unsafeCheck.setSelected(task.isUnsafe());
                     updateUnsafeCheck();
                     initialized = true;
@@ -370,7 +375,7 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
         if (result == JFileChooser.APPROVE_OPTION) {
             File script = chooser.getSelectedFile();
             lastSavePath = script.getParent();
-            BTraceSettings.sharedInstance().setLastScriptPath(chooser.getSelectedFile().getAbsolutePath());
+            setLastScriptPath(chooser.getSelectedFile().getAbsolutePath());
 
             BufferedWriter bw = null;
             try {
@@ -441,7 +446,7 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
 
     private void loadScript(File script) throws IOException {
         lastOpenPath = script.getParent();
-        BTraceSettings.sharedInstance().setLastScriptPath(script.getAbsolutePath());
+        setLastScriptPath(script.getAbsolutePath());
 
         char[] buffer = new char[2048];
         StringBuilder sb = new StringBuilder();
@@ -487,8 +492,8 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
             while (st.hasMoreTokens()) {
                 task.addCPEntry(st.nextToken());
             }
-            boolean unsafe = Boolean.parseBoolean(p.getProperty("unsafe", "false"));
-            task.setUnsafe(unsafe);
+//            boolean unsafe = Boolean.parseBoolean(p.getProperty("unsafe", "false"));
+//            task.setUnsafe(unsafe);
         } catch (IOException iOException) {
             // ignore; simply don't add a custom classpath as it doesn't exist
         }
@@ -532,6 +537,15 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
         } else {
             unsafeCheck.setForeground(Color.BLACK);
         }
-        task.setUnsafe(unsafeCheck.isSelected());
+//        task.setUnsafe(unsafeCheck.isSelected());
     }
+
+    public String getLastScriptPath() {
+        return prefs.get(EDITOR_LAST_SCRIPT, null);
+    }
+
+    public void setLastScriptPath(String path) {
+        prefs.put(EDITOR_LAST_SCRIPT, path);
+    }
+
 }

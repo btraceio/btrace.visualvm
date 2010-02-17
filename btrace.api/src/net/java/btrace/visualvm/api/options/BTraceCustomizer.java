@@ -31,6 +31,8 @@
 
 package net.java.btrace.visualvm.api.options;
 
+import net.java.btrace.visualvm.api.BTraceSettings;
+
 /**
  *
  * @author Jaroslav Bachorik <jaroslav.bachorik@sun.com>

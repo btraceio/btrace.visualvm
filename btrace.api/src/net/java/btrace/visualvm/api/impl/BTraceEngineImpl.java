@@ -32,6 +32,7 @@ import com.sun.btrace.comm.ExitCommand;
 import com.sun.btrace.comm.GridDataCommand;
 import com.sun.btrace.comm.MessageCommand;
 import com.sun.btrace.comm.NumberMapDataCommand;
+import com.sun.btrace.comm.RetransformationStartNotification;
 import com.sun.btrace.comm.StringMapDataCommand;
 import com.sun.tools.visualvm.application.Application;
 import com.sun.tools.visualvm.application.jvm.Jvm;
@@ -51,9 +52,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.java.btrace.visualvm.api.BTraceEngine;
+import net.java.btrace.visualvm.api.BTraceSettings;
 import net.java.btrace.visualvm.api.BTraceTask;
 import net.java.btrace.visualvm.api.compiler.BCompiler;
-import net.java.btrace.visualvm.api.options.BTraceSettings;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
@@ -143,7 +144,10 @@ public class BTraceEngineImpl extends BTraceEngine {
             final String toolsJarCp = findToolsJarPath(app);
             LOGGER.log(Level.FINEST, "tools.jar located at {0}", toolsJarCp);
             BCompiler compiler = new BCompiler(btrace.isUnsafe(), clientPath, toolsJarCp);
+            btrace.setState(BTraceTask.State.COMPILING);
             final byte[] bytecode = compiler.compile(btrace.getScript(), task.getClassPath(), btrace.getWriter());
+            btrace.setState(BTraceTask.State.COMPILED);
+            
             LOGGER.log(Level.FINEST, "Compiled the trace: {0} bytes", bytecode.length);
             RequestProcessor.getDefault().post(new Runnable() {
 
@@ -164,13 +168,14 @@ public class BTraceEngineImpl extends BTraceEngine {
                                 switch (cmd.getType()) {
                                     case Command.SUCCESS: {
                                         if (!retransforming) {
-                                            pw.println("BTrace code successfuly deployed");
+                                            pw.println("BTrace code accepted");
+                                        } else {
+                                            pw.println("Classes successfuly retransformed");
                                             pw.println("===========================================================");
                                             clientMap.put(btrace, client);
                                             result.set(true);
                                             latch.countDown();
-                                        } else {
-                                            pw.println("\nClasses successfuly retransformed");
+
                                             retransforming = false;
                                         }
                                         break;
@@ -207,19 +212,13 @@ public class BTraceEngineImpl extends BTraceEngine {
 //                                        }
                                         break;
                                     }
-//                                    case Command.RETRANSFORM_CLASSES: {
-//                                        int numClasses = ((RetransformClassesNotification)cmd).getNumClasses();
-//                                        pw.println("Going to retransform " + numClasses + " classes...");
-//                                        retransforming = true;
-//                                        break;
-//                                    }
-//                                    case Command.RETRANSFORM_CLASS: {
-//                                        int retransformed = ((RetransformClassNotification)cmd).getNumClasses();
-//                                        for(int i=0;i<retransformed;i++) {
-//                                            pw.print("+");
-//                                        }
-//                                        break;
-//                                    }
+                                    case Command.RETRANSFORMATION_START: {
+                                        int numClasses = ((RetransformationStartNotification)cmd).getNumClasses();
+                                        btrace.setInstrClasses(numClasses);
+                                        btrace.setState(BTraceTask.State.INSTRUMENTING);
+                                        retransforming = true;
+                                        break;
+                                    }
                                 }
                                 btrace.dispatchCommand(cmd);
                             }

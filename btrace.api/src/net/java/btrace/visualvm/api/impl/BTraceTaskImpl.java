@@ -31,6 +31,7 @@ import com.sun.tools.visualvm.application.jvm.JvmFactory;
 import java.io.File;
 import java.io.PrintWriter;
 import java.lang.ref.WeakReference;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -50,6 +51,7 @@ import org.openide.util.WeakListeners;
 public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateListener {
     final private static Pattern NAMED_EVENT_PATTERN = Pattern.compile("@OnEvent\\s*\\(\\s*\\\"(\\w.*)\\\"\\s*\\)", Pattern.MULTILINE);
     final private static Pattern ANONYMOUS_EVENT_PATTERN = Pattern.compile("@OnEvent(?!\\s*\\()");
+    final private static Pattern UNSAFE_PATTERN = Pattern.compile("@BTrace\\s*\\(.*unsafe\\s*=\\s*(true|false).*\\)", Pattern.MULTILINE);
 
     final private static Set<CommandListener> commandListeners = new HashSet<CommandListener>();
 
@@ -60,9 +62,10 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
     private PrintWriter consoleWriter = new PrintWriter(System.out, true);
 
     private String script;
+    private int numInstrClasses;
+    private boolean unsafe;
 
     final private Set<String> classPath = new HashSet<String>();
-    final private AtomicBoolean unsafeFlag = new AtomicBoolean();
 
     final private WeakReference<Application> appRef;
     final private BTraceEngine engine;
@@ -102,6 +105,10 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
     @Override
     public void setScript(String newValue) {
         script = newValue;
+        Matcher m = UNSAFE_PATTERN.matcher(script);
+        if (m.find()) {
+            unsafe = Boolean.parseBoolean(m.group(1));
+        }
     }
 
     @Override
@@ -135,7 +142,6 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
         return getScript() != null && getScript().contains("@OnEvent");
     }
 
-
     @Override
     public void addCommandListener(CommandListener listener) {
         commandListeners.add(listener);
@@ -152,6 +158,11 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
      */
     protected State getState() {
         return currentState.get();
+    }
+
+    @Override
+    public int getInstrClasses() {
+        return EnumSet.of(State.INSTRUMENTING, State.RUNNING).contains(getState()) ? numInstrClasses : -1;
     }
 
     /**
@@ -216,6 +227,9 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
     @Override
     public void onTaskStop(BTraceTask task) {
         if (task.equals(this)) {
+            for(CommandListener cl : commandListeners) {
+                removeCommandListener(cl);
+            }
             setState(State.FINISHED);
         }
     }
@@ -246,17 +260,16 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
 
     @Override
     public boolean isUnsafe() {
-        return unsafeFlag.get();
+        return unsafe;
     }
 
-    @Override
-    public void setUnsafe(boolean value) {
-        unsafeFlag.set(value);
-    }
-
-    private void setState(State newValue) {
+    void setState(State newValue) {
         currentState.set(newValue);
         fireStateChange();
+    }
+
+    void setInstrClasses(int value) {
+        numInstrClasses = value;
     }
 
     private void fireStateChange() {

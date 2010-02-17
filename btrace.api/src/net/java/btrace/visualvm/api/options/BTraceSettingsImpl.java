@@ -32,21 +32,14 @@ import org.openide.util.NbPreferences;
  *
  * @author Jaroslav Bachorik <jaroslav.bachorik@sun.com>
  */
-public class BTraceSettings {
-    final static private BTraceSettings INSTANCE = new BTraceSettings();
-    
+public class BTraceSettingsImpl {
     final private static String DEBUG_PROPERTY = "debugFlag";
     final private static String DUMP_PROPERTY = "dumpFlag" ;
     final private static String DUMP_PATH_PROPERTY = "dumpPath";
-    final private static String EDITOR_LAST_SCRIPT = "editor.lastOpened";
 
-    private Preferences prefs = NbPreferences.forModule(BTraceSettings.class);
+    private Preferences prefs = NbPreferences.forModule(BTraceSettingsImpl.class);
 
-    final static public BTraceSettings sharedInstance() {
-        return INSTANCE;
-    }
-
-    private BTraceSettings() {}
+    public BTraceSettingsImpl() {}
 
     public boolean isDebugMode() {
         return prefs.getBoolean(DEBUG_PROPERTY, false);
@@ -71,13 +64,4 @@ public class BTraceSettings {
     public void setDumpClasses(boolean dumpClasses) {
         prefs.putBoolean(DUMP_PROPERTY, dumpClasses);
     }
-
-    public String getLastScriptPath() {
-        return prefs.get(EDITOR_LAST_SCRIPT, null);
-    }
-
-    public void setLastScriptPath(String path) {
-        prefs.put(EDITOR_LAST_SCRIPT, path);
-    }
-
 }
