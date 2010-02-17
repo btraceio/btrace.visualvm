@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: net.java.btrace.visualvm.api/0
+OpenIDE-Module-Layer: net/java/btrace/visualvm/api/layer.xml
+OpenIDE-Module-Localizing-Bundle: net/java/btrace/visualvm/api/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

@@ -29,12 +29,10 @@ import com.sun.tools.visualvm.core.datasource.descriptor.DataSourceDescriptorFac
 import com.sun.tools.visualvm.core.ui.DataSourceView;
 import com.sun.tools.visualvm.core.ui.components.DataViewComponent;
 import javax.swing.JSplitPane;
-import javax.swing.SwingUtilities;
 import net.java.btrace.visualvm.api.BTraceTask;
 import net.java.btrace.visualvm.views.classpath.BTraceClassPathPanel;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
-import org.openide.util.RequestProcessor;
 
 /**
  *

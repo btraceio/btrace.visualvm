@@ -23,30 +23,33 @@
  * have any questions.
  */
 
-package net.java.btrace.visualvm.impl;
+package net.java.btrace.visualvm.api.options;
 
-import com.sun.tools.visualvm.core.datasource.descriptor.DataSourceDescriptor;
-import java.awt.Image;
-import net.java.btrace.visualvm.api.BTraceTask;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import org.netbeans.spi.options.OptionsCategory;
+import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.Utilities;
 
 /**
  *
- * @author Jaroslav Bachorik
+ * @author Jaroslav Bachorik <jaroslav.bachorik@sun.com>
  */
-public class BTraceTaskDescriptor extends DataSourceDescriptor<BTraceTask> {
-    public BTraceTaskDescriptor(BTraceTask dataSource) {
-        super(dataSource);
+public class BTraceOptionsCategory extends OptionsCategory {
+    public String getCategoryName() {
+        return "BTrace";
+    }
+
+    public String getTitle() {
+        return "BTrace";
     }
 
     @Override
-    public Image getIcon() {
-        return Utilities.loadImage("net/java/btrace/visualvm/resources/btrace.png");
+    public Icon getIcon() {
+        return new ImageIcon(Utilities.loadImage("net/java/btrace/visualvm/resources/btrace.png")); // NOI18N
     }
 
-    @Override
-    public String getName() {
-        return "BTrace Task";
+    public OptionsPanelController create() {
+        return new BTraceOptionsPanelController();
     }
-
 }

@@ -22,7 +22,7 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-package net.java.btrace.visualvm.impl;
+package net.java.btrace.visualvm.api.impl;
 
 import com.sun.btrace.comm.Command;
 import com.sun.tools.visualvm.application.Application;

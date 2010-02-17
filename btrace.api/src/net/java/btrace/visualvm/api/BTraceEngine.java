@@ -27,8 +27,8 @@ package net.java.btrace.visualvm.api;
 
 import com.sun.tools.visualvm.application.Application;
 import java.util.EventListener;
-import net.java.btrace.visualvm.impl.BTraceEngineImpl;
-import net.java.btrace.visualvm.impl.BTraceTaskImpl;
+import net.java.btrace.visualvm.api.impl.BTraceEngineImpl;
+import net.java.btrace.visualvm.api.impl.BTraceTaskImpl;
 import org.openide.util.WeakListeners;
 
 /**

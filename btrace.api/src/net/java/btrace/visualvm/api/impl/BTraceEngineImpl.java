@@ -22,7 +22,7 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-package net.java.btrace.visualvm.impl;
+package net.java.btrace.visualvm.api.impl;
 
 import com.sun.btrace.CommandListener;
 import com.sun.btrace.client.Client;
@@ -52,8 +52,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.java.btrace.visualvm.api.BTraceEngine;
 import net.java.btrace.visualvm.api.BTraceTask;
-import net.java.btrace.visualvm.compiler.BCompiler;
-import net.java.btrace.visualvm.options.BTraceSettings;
+import net.java.btrace.visualvm.api.compiler.BCompiler;
+import net.java.btrace.visualvm.api.options.BTraceSettings;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
@@ -152,22 +152,27 @@ public class BTraceEngineImpl extends BTraceEngine {
                     LOGGER.log(Level.FINEST, "BTrace agent listening on port {0}", portStr);
                     final PrintWriter pw = new PrintWriter(btrace.getWriter());
                     Client existingClient = clientMap.get(btrace);
-                    final Client client = existingClient != null ? existingClient : new Client(portStr != null ? Integer.parseInt(portStr) : findFreePort(), ".", BTraceSettings.sharedInstance().isDebugMode(), btrace.isUnsafe(),  BTraceSettings.sharedInstance().isDumpClasses(), BTraceSettings.sharedInstance().getDumpClassPath());
+                    final Client client = existingClient != null ? existingClient : new Client(portStr != null ? Integer.parseInt(portStr) : findFreePort(), ".", BTraceSettings.sharedInstance().isDebugMode(), true, btrace.isUnsafe(),  BTraceSettings.sharedInstance().isDumpClasses(), BTraceSettings.sharedInstance().getDumpClassPath());
                     
                     try {
                         client.attach(String.valueOf(app.getPid()), agentPath, toolsJarCp, null);
                         Thread.sleep(200); // give the server side time to initialize and open the port
                         client.submit(bytecode, new String[]{}, new CommandListener() {
-
+                            private boolean retransforming = false;
                             public void onCommand(Command cmd) throws IOException {
                                 LOGGER.log(Level.FINEST, "Received command: {0}", cmd.toString());
                                 switch (cmd.getType()) {
                                     case Command.SUCCESS: {
-                                        pw.println("BTrace code successfuly deployed");
-                                        pw.println("===========================================================");
-                                        clientMap.put(btrace, client);
-                                        result.set(true);
-                                        latch.countDown();
+                                        if (!retransforming) {
+                                            pw.println("BTrace code successfuly deployed");
+                                            pw.println("===========================================================");
+                                            clientMap.put(btrace, client);
+                                            result.set(true);
+                                            latch.countDown();
+                                        } else {
+                                            pw.println("\nClasses successfuly retransformed");
+                                            retransforming = false;
+                                        }
                                         break;
                                     }
                                     case Command.MESSAGE: {
@@ -202,6 +207,19 @@ public class BTraceEngineImpl extends BTraceEngine {
 //                                        }
                                         break;
                                     }
+//                                    case Command.RETRANSFORM_CLASSES: {
+//                                        int numClasses = ((RetransformClassesNotification)cmd).getNumClasses();
+//                                        pw.println("Going to retransform " + numClasses + " classes...");
+//                                        retransforming = true;
+//                                        break;
+//                                    }
+//                                    case Command.RETRANSFORM_CLASS: {
+//                                        int retransformed = ((RetransformClassNotification)cmd).getNumClasses();
+//                                        for(int i=0;i<retransformed;i++) {
+//                                            pw.print("+");
+//                                        }
+//                                        break;
+//                                    }
                                 }
                                 btrace.dispatchCommand(cmd);
                             }

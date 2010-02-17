@@ -29,6 +29,7 @@ import com.sun.tools.visualvm.core.datasource.DataSource;
 import com.sun.tools.visualvm.core.datasource.descriptor.DataSourceDescriptor;
 import com.sun.tools.visualvm.core.datasource.descriptor.DataSourceDescriptorFactory;
 import com.sun.tools.visualvm.core.model.AbstractModelProvider;
+import net.java.btrace.visualvm.api.BTraceTask;
 
 /**
  *
@@ -45,13 +46,13 @@ public class BTraceTaskDescriptorProvider extends AbstractModelProvider<DataSour
     }
 
     public DataSourceDescriptor createModelFor(DataSource ds) {
-        if (ds instanceof BTraceTaskImpl) {
-            return createDescriptor((BTraceTaskImpl)ds);
+        if (ds instanceof BTraceTask) {
+            return createDescriptor((BTraceTask)ds);
         }
         return null;
     }
     
-    private DataSourceDescriptor createDescriptor(BTraceTaskImpl ds) {
+    private DataSourceDescriptor createDescriptor(BTraceTask ds) {
         return new BTraceTaskDescriptor(ds);
     }
 
