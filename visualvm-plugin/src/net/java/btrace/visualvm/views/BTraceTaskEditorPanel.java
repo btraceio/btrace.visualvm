@@ -92,18 +92,21 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
         public void insertUpdate(DocumentEvent e) {
             if (task == null) return;
             task.setScript(scriptEditor.getText());
+            updateUnsafeCheck();
         }
 
         @Override
         public void removeUpdate(DocumentEvent e) {
             if (task == null) return;
             task.setScript(scriptEditor.getText());
+            updateUnsafeCheck();
         }
 
         @Override
         public void changedUpdate(DocumentEvent e) {
             if (task == null) return;
             task.setScript(scriptEditor.getText());
+            updateUnsafeCheck();
         }
     };
 
@@ -128,7 +131,6 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
             if (getLastScriptPath() != null) {
                 try {
                     loadScript(new File(getLastScriptPath()));
-                    unsafeCheck.setSelected(task.isUnsafe());
                     updateUnsafeCheck();
                     initialized = true;
                 } catch (FileNotFoundException ex) {
@@ -299,6 +301,7 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
         unsafeCheck.setMnemonic('u');
         unsafeCheck.setText(org.openide.util.NbBundle.getMessage(BTraceTaskEditorPanel.class, "BTraceTaskEditorPanel.unsafeCheck.text")); // NOI18N
         unsafeCheck.setToolTipText(org.openide.util.NbBundle.getMessage(BTraceTaskEditorPanel.class, "BTraceTaskEditorPanel.unsafeCheck.toolTipText")); // NOI18N
+        unsafeCheck.setFocusable(false);
         unsafeCheck.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         unsafeCheck.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -311,8 +314,8 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
+            .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 527, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 527, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -532,6 +535,7 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
     }
 
     private void updateUnsafeCheck() {
+        unsafeCheck.setSelected(task.isUnsafe());
         if (unsafeCheck.isSelected()) {
             unsafeCheck.setForeground(Color.RED);
         } else {
