@@ -11,8 +11,7 @@ import com.sun.tools.visualvm.core.ui.DataSourceWindowManager;
 import com.sun.tools.visualvm.core.ui.actions.SingleDataSourceAction;
 import java.awt.event.ActionEvent;
 import java.util.Set;
-import net.java.btrace.visualvm.api.BTraceEngine;
-import net.java.btrace.visualvm.api.BTraceTask;
+import net.java.btrace.visualvm.datasources.BTraceTaskDS;
 import org.openide.util.NbBundle;
 
 /**
@@ -22,8 +21,8 @@ import org.openide.util.NbBundle;
 public class TraceApplicationAction extends SingleDataSourceAction<Application> {
     @Override
     protected void actionPerformed(Application dataSource, ActionEvent actionEvent) {
-        BTraceTask task = BTraceEngine.sharedInstance().createTask(dataSource);
-        Set<BTraceTask> registered = dataSource.getRepository().getDataSources(BTraceTask.class);
+        BTraceTaskDS task = new BTraceTaskDS(dataSource);
+        Set<BTraceTaskDS> registered = dataSource.getRepository().getDataSources(BTraceTaskDS.class);
         if (!registered.contains(task)) {
             dataSource.getRepository().addDataSource(task);
         } else {

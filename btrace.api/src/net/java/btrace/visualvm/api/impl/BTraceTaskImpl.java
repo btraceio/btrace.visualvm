@@ -25,22 +25,20 @@
 package net.java.btrace.visualvm.api.impl;
 
 import com.sun.btrace.comm.Command;
-import com.sun.tools.visualvm.application.Application;
-import com.sun.tools.visualvm.application.jvm.Jvm;
-import com.sun.tools.visualvm.application.jvm.JvmFactory;
 import java.io.File;
 import java.io.PrintWriter;
-import java.lang.ref.WeakReference;
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.java.btrace.visualvm.api.BTraceEngine;
 import net.java.btrace.visualvm.api.BTraceTask;
+import net.java.btrace.visualvm.spi.ProcessDetailsProvider;
+import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
 
@@ -53,7 +51,7 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
     final private static Pattern ANONYMOUS_EVENT_PATTERN = Pattern.compile("@OnEvent(?!\\s*\\()");
     final private static Pattern UNSAFE_PATTERN = Pattern.compile("@BTrace\\s*\\(.*unsafe\\s*=\\s*(true|false).*\\)", Pattern.MULTILINE);
 
-    final private static Set<CommandListener> commandListeners = new HashSet<CommandListener>();
+    final private Set<CommandListener> commandListeners = new HashSet<CommandListener>();
 
     final private AtomicReference<State> currentState = new AtomicReference<State>(State.NEW);
     final private Set<StateListener> stateListeners = new HashSet<StateListener>();
@@ -67,12 +65,12 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
 
     final private Set<String> classPath = new HashSet<String>();
 
-    final private WeakReference<Application> appRef;
     final private BTraceEngine engine;
 
-    public BTraceTaskImpl(Application app, BTraceEngine engine) {
-        super(app);
-        appRef = new WeakReference<Application>(app);
+    final private int pid;
+
+    public BTraceTaskImpl(int pid, BTraceEngine engine) {
+        this.pid = pid;
         this.engine = engine;
         engine.addListener(WeakListeners.create(BTraceEngine.StateListener.class, this, engine));
     }
@@ -80,11 +78,6 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
     @Override
     public BTraceEngine getEngine() {
         return engine;
-    }
-
-    @Override
-    public Application getApplication() {
-        return appRef.get();
     }
 
     @Override
@@ -150,6 +143,14 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
     @Override
     public void removeCommandListener(CommandListener listener) {
         commandListeners.remove(listener);
+    }
+
+    public int getPid() {
+        return pid;
+    }
+
+    public Properties getSystemProperties() {
+        return getProcessDetailsProvider().getSystemProperties(pid);
     }
 
     /**
@@ -227,9 +228,6 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
     @Override
     public void onTaskStop(BTraceTask task) {
         if (task.equals(this)) {
-            for(CommandListener cl : commandListeners) {
-                removeCommandListener(cl);
-            }
             setState(State.FINISHED);
         }
     }
@@ -304,7 +302,7 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
             return false;
         }
         final BTraceTaskImpl other = (BTraceTaskImpl) obj;
-        if (this.appRef != other.appRef && (this.appRef == null || !this.appRef.equals(other.appRef))) {
+        if (this.pid != other.pid) {
             return false;
         }
         if (this.engine != other.engine && (this.engine == null || !this.engine.equals(other.engine))) {
@@ -316,15 +314,15 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 19 * hash + (this.appRef != null ? this.appRef.hashCode() : 0);
+        hash = 19 * hash + pid;
         hash = 19 * hash + (this.engine != null ? this.engine.hashCode() : 0);
         return hash;
     }
 
     private String getInitClassPath() {
-        Jvm jvm = JvmFactory.getJVMFor(getApplication());
-        String userDir = jvm.getSystemProperties().getProperty("user.dir", null); // NOI18N
-        String cp = jvm.getSystemProperties().getProperty("java.class.path", ""); // NOI18N
+        Properties props = getSystemProperties();
+        String userDir = props.getProperty("user.dir", null); // NOI18N
+        String cp = props.getProperty("java.class.path", ""); // NOI18N
         StringBuilder initCP = new StringBuilder();
         if (userDir != null) {
             StringTokenizer st = new StringTokenizer(cp, File.pathSeparator);
@@ -337,5 +335,10 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
             }
         }
         return cp.toString();
+    }
+
+    final private ProcessDetailsProvider getProcessDetailsProvider() {
+        ProcessDetailsProvider pdp = Lookup.getDefault().lookup(ProcessDetailsProvider.class);
+        return pdp != null ? pdp : ProcessDetailsProvider.NULL;
     }
 }

@@ -30,6 +30,7 @@ import com.sun.tools.visualvm.core.ui.DataSourceView;
 import com.sun.tools.visualvm.core.ui.components.DataViewComponent;
 import javax.swing.JSplitPane;
 import net.java.btrace.visualvm.api.BTraceTask;
+import net.java.btrace.visualvm.datasources.BTraceTaskDS;
 import net.java.btrace.visualvm.views.classpath.BTraceClassPathPanel;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
@@ -39,13 +40,17 @@ import org.netbeans.api.progress.ProgressHandleFactory;
  * @author Jaroslav Bachorik
  */
 public class BTraceTaskView extends DataSourceView {
-    public BTraceTaskView(BTraceTask task) {
+    public BTraceTaskView(BTraceTaskDS task) {
         super(task, "BTrace", DataSourceDescriptorFactory.getDescriptor(task).getIcon(), DataSourceView.POSITION_LAST, true);
     }
 
     @Override
     protected DataViewComponent createComponent() {
-        final BTraceTask task = (BTraceTask)getDataSource();
+        final OutputPane output = new OutputPane();
+        final BTraceTaskDS taskDS = (BTraceTaskDS)getDataSource();
+        taskDS.setWriter(output.getWriter());
+
+        final BTraceTask task = taskDS.getTask();
         BTraceTaskEditorPanel panel = new BTraceTaskEditorPanel(task);
         
         DataViewComponent.MasterView mv = new DataViewComponent.MasterView("BTrace", "", panel);
@@ -53,7 +58,6 @@ public class BTraceTaskView extends DataSourceView {
         final DataViewComponent dvc = new DataViewComponent(mv, mvc);
 
 
-        final OutputPane output = new OutputPane();
         final BTraceClassPathPanel cpPanel = new BTraceClassPathPanel(task);
 
         dvc.addDetailsView(new DataViewComponent.DetailsView("Class-Path", "Class-Path", POSITION_AT_THE_END, cpPanel, null), DataViewComponent.BOTTOM_RIGHT);
@@ -67,8 +71,6 @@ public class BTraceTaskView extends DataSourceView {
             JSplitPane splitPane = (JSplitPane)panel.getParent().getParent().getParent().getParent(); // get the master/details splitter
             splitPane.getBottomComponent().setVisible(false); // hide details container (the actual workaround - should work automatically)
         } catch (Exception e) {} // DataViewComponent implementation probably changed, no way to apply the workaround
-
-        task.setWriter(output.getWriter());
 
         task.addStateListener(new BTraceTask.StateListener() {
             private ProgressHandle ph = null;

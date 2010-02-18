@@ -27,15 +27,15 @@ package net.java.btrace.visualvm.impl;
 
 import com.sun.tools.visualvm.core.datasource.descriptor.DataSourceDescriptor;
 import java.awt.Image;
-import net.java.btrace.visualvm.api.BTraceTask;
+import net.java.btrace.visualvm.datasources.BTraceTaskDS;
 import org.openide.util.Utilities;
 
 /**
  *
  * @author Jaroslav Bachorik
  */
-public class BTraceTaskDescriptor extends DataSourceDescriptor<BTraceTask> {
-    public BTraceTaskDescriptor(BTraceTask dataSource) {
+public class BTraceTaskDescriptor extends DataSourceDescriptor<BTraceTaskDS> {
+    public BTraceTaskDescriptor(BTraceTaskDS dataSource) {
         super(dataSource);
     }
 

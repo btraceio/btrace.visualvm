@@ -26,8 +26,6 @@
 package net.java.btrace.visualvm.api;
 
 import com.sun.btrace.comm.Command;
-import com.sun.tools.visualvm.application.Application;
-import com.sun.tools.visualvm.core.datasource.DataSource;
 import java.io.PrintWriter;
 import java.util.EventListener;
 import java.util.Set;
@@ -37,7 +35,7 @@ import org.openide.util.WeakListeners;
  *
  * @author Jaroslav Bachorik <jaroslav.bachorik@sun.com>
  */
-public abstract class BTraceTask extends DataSource {
+public abstract class BTraceTask {
     /**
      * Simple state listener interface
      */
@@ -62,11 +60,6 @@ public abstract class BTraceTask extends DataSource {
      */
     public static enum State {
         NEW, STARTING, COMPILING, COMPILED, INSTRUMENTING, RUNNING, FINISHED
-    }
-
-    public BTraceTask(Application master) {
-        super(master);
-        setVisible(false);
     }
 
     /**
@@ -127,11 +120,6 @@ public abstract class BTraceTask extends DataSource {
      * @return Returns the bound {@linkplain BTraceEngine} instance
      */
     abstract public BTraceEngine getEngine();
-    /**
-     * Property getter
-     * @return Returns the bound {@linkplain Application} instance
-     */
-    abstract public Application getApplication();
 
     /**
      * Property getter

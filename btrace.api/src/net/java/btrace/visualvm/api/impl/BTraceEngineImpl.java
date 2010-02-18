@@ -27,20 +27,9 @@ package net.java.btrace.visualvm.api.impl;
 import com.sun.btrace.CommandListener;
 import com.sun.btrace.client.Client;
 import com.sun.btrace.comm.Command;
-import com.sun.btrace.comm.ErrorCommand;
-import com.sun.btrace.comm.ExitCommand;
-import com.sun.btrace.comm.GridDataCommand;
-import com.sun.btrace.comm.MessageCommand;
-import com.sun.btrace.comm.NumberMapDataCommand;
 import com.sun.btrace.comm.RetransformationStartNotification;
-import com.sun.btrace.comm.StringMapDataCommand;
-import com.sun.tools.visualvm.application.Application;
-import com.sun.tools.visualvm.application.jvm.Jvm;
-import com.sun.tools.visualvm.application.jvm.JvmFactory;
-import com.sun.tools.visualvm.core.datasource.DataSource;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -55,8 +44,10 @@ import net.java.btrace.visualvm.api.BTraceEngine;
 import net.java.btrace.visualvm.api.BTraceSettings;
 import net.java.btrace.visualvm.api.BTraceTask;
 import net.java.btrace.visualvm.api.compiler.BCompiler;
+import net.java.btrace.visualvm.spi.ProcessDetailsProvider;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -81,12 +72,11 @@ public class BTraceEngineImpl extends BTraceEngine {
     }
 
     @Override
-    public BTraceTask createTask(Application app) {
-        if (!app.isLocalApplication()) return null;
-        Jvm jvm = JvmFactory.getJVMFor(app);
-        if (!jvm.isAttachable() || !jvm.isGetSystemPropertiesSupported()) return null;
-        
-        return new BTraceTaskImpl(app, this);
+    public BTraceTask createTask(int pid) {
+        if (getProcessDetailsProvider().canBeTraced(pid)) {
+            return new BTraceTaskImpl(pid, this);
+        }
+        return null;
     }
 
     @Override
@@ -140,8 +130,7 @@ public class BTraceEngineImpl extends BTraceEngine {
         final BTraceTaskImpl btrace = (BTraceTaskImpl) task;
         try {
             final CountDownLatch latch = new CountDownLatch(1);
-            final Application app = task.getApplication();
-            final String toolsJarCp = findToolsJarPath(app);
+            final String toolsJarCp = findToolsJarPath(btrace.getSystemProperties());
             LOGGER.log(Level.FINEST, "tools.jar located at {0}", toolsJarCp);
             BCompiler compiler = new BCompiler(btrace.isUnsafe(), clientPath, toolsJarCp);
             btrace.setState(BTraceTask.State.COMPILING);
@@ -152,14 +141,13 @@ public class BTraceEngineImpl extends BTraceEngine {
             RequestProcessor.getDefault().post(new Runnable() {
 
                 public void run() {
-                    String portStr = JvmFactory.getJVMFor(app).getSystemProperties().getProperty("btrace.port"); // I
+                    String portStr = btrace.getSystemProperties().getProperty("btrace.port"); // I
                     LOGGER.log(Level.FINEST, "BTrace agent listening on port {0}", portStr);
-                    final PrintWriter pw = new PrintWriter(btrace.getWriter());
                     Client existingClient = clientMap.get(btrace);
                     final Client client = existingClient != null ? existingClient : new Client(portStr != null ? Integer.parseInt(portStr) : findFreePort(), ".", BTraceSettings.sharedInstance().isDebugMode(), true, btrace.isUnsafe(),  BTraceSettings.sharedInstance().isDumpClasses(), BTraceSettings.sharedInstance().getDumpClassPath());
                     
                     try {
-                        client.attach(String.valueOf(app.getPid()), agentPath, toolsJarCp, null);
+                        client.attach(String.valueOf(btrace.getPid()), agentPath, toolsJarCp, null);
                         Thread.sleep(200); // give the server side time to initialize and open the port
                         client.submit(bytecode, new String[]{}, new CommandListener() {
                             private boolean retransforming = false;
@@ -167,11 +155,7 @@ public class BTraceEngineImpl extends BTraceEngine {
                                 LOGGER.log(Level.FINEST, "Received command: {0}", cmd.toString());
                                 switch (cmd.getType()) {
                                     case Command.SUCCESS: {
-                                        if (!retransforming) {
-                                            pw.println("BTrace code accepted");
-                                        } else {
-                                            pw.println("Classes successfuly retransformed");
-                                            pw.println("===========================================================");
+                                        if (retransforming) {
                                             clientMap.put(btrace, client);
                                             result.set(true);
                                             latch.countDown();
@@ -180,36 +164,9 @@ public class BTraceEngineImpl extends BTraceEngine {
                                         }
                                         break;
                                     }
-                                    case Command.MESSAGE: {
-                                        ((MessageCommand) cmd).print(pw);
-                                        break;
-                                    }
-                                    case Command.GRID_DATA: {
-                                        ((GridDataCommand)cmd).print(pw);
-                                        break;
-                                    }
-                                    case Command.NUMBER_MAP: {
-                                        ((NumberMapDataCommand)cmd).print(pw);
-                                        break;
-                                    }
-                                    case Command.STRING_MAP: {
-                                        ((StringMapDataCommand)cmd).print(pw);
-                                        break;
-                                    }
-                                    case Command.ERROR: {
-                                        pw.println("*** Error in BTrace probe");
-                                        pw.println("===========================================================");
-                                        ((ErrorCommand) cmd).getCause().printStackTrace(pw);
-                                        break;
-                                    }
                                     case Command.EXIT: {
                                         latch.countDown();
-                                        pw.println("===========================================================");
-                                        pw.println("Application exited: " + ((ExitCommand) cmd).getExitCode());
                                         stop(btrace);
-//                                        if (((ExitCommand) cmd).getExitCode() < 0) {
-//                                            btrace.stop();
-//                                        }
                                         break;
                                     }
                                     case Command.RETRANSFORMATION_START: {
@@ -256,10 +213,6 @@ public class BTraceEngineImpl extends BTraceEngine {
         return true;
     }
 
-    public boolean supports(DataSource ds) {
-        return ds instanceof Application;
-    }
-
     @Override
     public void sendEvent(BTraceTaskImpl task) {
         Client client = clientMap.get(task);
@@ -304,9 +257,8 @@ public class BTraceEngineImpl extends BTraceEngine {
         return port;
     }
 
-    private static String findToolsJarPath(Application app) {
+    private static String findToolsJarPath(Properties props) {
         String toolsJarPath = null;
-        Properties props = JvmFactory.getJVMFor(app).getSystemProperties();
 
         if (props != null && props.containsKey("java.home")) {
             if(props.getProperty("os.name").startsWith("Mac")) {
@@ -334,6 +286,11 @@ public class BTraceEngineImpl extends BTraceEngine {
             }
         }
         return toolsJarPath;
+    }
+
+    final private ProcessDetailsProvider getProcessDetailsProvider() {
+        ProcessDetailsProvider pdp = Lookup.getDefault().lookup(ProcessDetailsProvider.class);
+        return pdp != null ? pdp : ProcessDetailsProvider.NULL;
     }
 
     private void fireOnTaskStart(BTraceTask task) {

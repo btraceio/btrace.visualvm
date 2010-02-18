@@ -25,10 +25,11 @@
 
 package net.java.btrace.visualvm.api;
 
-import com.sun.tools.visualvm.application.Application;
 import java.util.EventListener;
 import net.java.btrace.visualvm.api.impl.BTraceEngineImpl;
 import net.java.btrace.visualvm.api.impl.BTraceTaskImpl;
+import net.java.btrace.visualvm.spi.ProcessDetailsProvider;
+import org.openide.util.Lookup;
 import org.openide.util.WeakListeners;
 
 /**
@@ -65,11 +66,11 @@ public abstract class BTraceEngine {
 
     /**
      * Abstract factory method for {@linkplain BTraceTask} instances
-     * @param app The application to create the task form
-     * @return Returns a {@linkplain BTraceTask} instance bound to the particular {@linkplain Application}
+     * @param pid The application PID to create the task for
+     * @return Returns a {@linkplain BTraceTask} instance bound to the particular java process
      *         or null if it is not possible to run BTrace against the application
      */
-    abstract public BTraceTask createTask(Application app);
+    abstract public BTraceTask createTask(int pid);
 
     /**
      * Starts the given {@linkplain BTraceTask} instance

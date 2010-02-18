@@ -29,28 +29,29 @@ import com.sun.tools.visualvm.core.ui.DataSourceView;
 import com.sun.tools.visualvm.core.ui.DataSourceViewProvider;
 import com.sun.tools.visualvm.core.ui.DataSourceViewsManager;
 import net.java.btrace.visualvm.api.BTraceTask;
+import net.java.btrace.visualvm.datasources.BTraceTaskDS;
 
 /**
  *
  * @author Jaroslav Bachorik
  */
-public class BTraceTaskViewProvider extends DataSourceViewProvider<BTraceTask> {
+public class BTraceTaskViewProvider extends DataSourceViewProvider<BTraceTaskDS> {
     private static class Singleton {
         private static BTraceTaskViewProvider INSTANCE = new BTraceTaskViewProvider();
     }
 
     @Override
-    protected DataSourceView createView(BTraceTask dataSource) {
+    protected DataSourceView createView(BTraceTaskDS dataSource) {
         return new BTraceTaskView(dataSource);
     }
 
     @Override
-    protected boolean supportsViewFor(BTraceTask dataSource) {
+    protected boolean supportsViewFor(BTraceTaskDS dataSource) {
         return true;
     }
 
     public static synchronized void initialize() {
-        DataSourceViewsManager.sharedInstance().addViewProvider(Singleton.INSTANCE, BTraceTask.class);
+        DataSourceViewsManager.sharedInstance().addViewProvider(Singleton.INSTANCE, BTraceTaskDS.class);
     }
 
     public static synchronized void shutdown() {
