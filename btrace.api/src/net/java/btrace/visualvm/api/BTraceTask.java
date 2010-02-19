@@ -25,6 +25,7 @@
 
 package net.java.btrace.visualvm.api;
 
+import com.sun.btrace.annotations.BTrace;
 import com.sun.btrace.comm.Command;
 import java.io.PrintWriter;
 import java.util.EventListener;
@@ -100,6 +101,12 @@ public abstract class BTraceTask {
      * @return Returns the script source code
      */
     abstract public String getScript();
+
+    /**
+     * Returns the name specified in {@linkplain BTrace} annotation
+     * @return Returns the name specified in {@linkplain BTrace} annotation or NULL if not specified
+     */
+    abstract public String getName();
 
     /**
      * Property setter

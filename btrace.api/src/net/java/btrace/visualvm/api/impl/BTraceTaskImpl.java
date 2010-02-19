@@ -50,6 +50,7 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
     final private static Pattern NAMED_EVENT_PATTERN = Pattern.compile("@OnEvent\\s*\\(\\s*\\\"(\\w.*)\\\"\\s*\\)", Pattern.MULTILINE);
     final private static Pattern ANONYMOUS_EVENT_PATTERN = Pattern.compile("@OnEvent(?!\\s*\\()");
     final private static Pattern UNSAFE_PATTERN = Pattern.compile("@BTrace\\s*\\(.*unsafe\\s*=\\s*(true|false).*\\)", Pattern.MULTILINE);
+    final private static Pattern NAME_PATTERN = Pattern.compile("@BTrace\\s*\\(.*name\\s*=\\s*\"(.*)\".*\\)", Pattern.MULTILINE);
 
     final private Set<CommandListener> commandListeners = new HashSet<CommandListener>();
 
@@ -93,6 +94,15 @@ public class BTraceTaskImpl extends BTraceTask implements BTraceEngine.StateList
     @Override
     public String getScript() {
         return script;
+    }
+
+    @Override
+    public String getName() {
+        Matcher m = NAME_PATTERN.matcher(script);
+        if (m.find()) {
+            return m.group(1);
+        }
+        return null;
     }
 
     @Override
