@@ -1,4 +1,4 @@
-In order to build this plugin you will need VisualVM 1.0.1 (or later) platform.
+In order to build this plugin you will need VisualVM 1.2.2 (or later) platform.
 You can get it from https://visualvm.dev.java.net/download.html
 
 Once you have it downloaded and unpacked on your harddrive you will need to

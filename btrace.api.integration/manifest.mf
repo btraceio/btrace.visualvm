@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: net.java.btrace.visualvm.api
+OpenIDE-Module-Localizing-Bundle: net/java/btrace/visualvm/api/Bundle.properties
+OpenIDE-Module-Specification-Version: 0.1
+
