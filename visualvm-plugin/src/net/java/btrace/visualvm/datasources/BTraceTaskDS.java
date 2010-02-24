@@ -5,20 +5,16 @@
 
 package net.java.btrace.visualvm.datasources;
 
-import com.sun.btrace.comm.Command;
-import com.sun.btrace.comm.ErrorCommand;
-import com.sun.btrace.comm.ExitCommand;
-import com.sun.btrace.comm.GridDataCommand;
-import com.sun.btrace.comm.MessageCommand;
-import com.sun.btrace.comm.NumberMapDataCommand;
-import com.sun.btrace.comm.StringMapDataCommand;
+
+import com.sun.btrace.api.BTraceEngine;
+import com.sun.btrace.api.BTraceTask;
+import com.sun.btrace.api.BTraceTask.State;
 import com.sun.tools.visualvm.application.Application;
 import com.sun.tools.visualvm.core.datasource.DataSource;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.concurrent.atomic.AtomicReference;
-import net.java.btrace.visualvm.api.BTraceEngine;
-import net.java.btrace.visualvm.api.BTraceTask;
+import net.java.btrace.visualvm.impl.BTraceOutputRegistry;
 
 /**
  *
@@ -29,50 +25,57 @@ public class BTraceTaskDS extends DataSource {
 
     final private AtomicReference<PrintWriter> writerRef = new AtomicReference<PrintWriter>();
 
-    final private BTraceTask.CommandListener logger = new BTraceTask.CommandListener() {
-
-        @Override
-        public void onCommand(Command cmd) {
-            PrintWriter pw = writerRef.get();
-            if (pw == null) return;
-
-            switch (cmd.getType()) {
-                case Command.MESSAGE: {
-                    ((MessageCommand) cmd).print(pw);
-                    break;
-                }
-                case Command.GRID_DATA: {
-                    ((GridDataCommand)cmd).print(pw);
-                    break;
-                }
-                case Command.NUMBER_MAP: {
-                    ((NumberMapDataCommand)cmd).print(pw);
-                    break;
-                }
-                case Command.STRING_MAP: {
-                    ((StringMapDataCommand)cmd).print(pw);
-                    break;
-                }
-                case Command.ERROR: {
-                    pw.println("*** Error in BTrace probe");
-                    pw.println("===========================================================");
-                    ((ErrorCommand) cmd).getCause().printStackTrace(pw);
-                    break;
-                }
-                case Command.EXIT: {
-                    pw.println("===========================================================");
-                    pw.println("Application exited: " + ((ExitCommand) cmd).getExitCode());
-                    break;
-                }
-            }
-        }
-    };
+    final private static BTraceEngine engine = BTraceEngine.newInstance();
 
     public BTraceTaskDS(Application app) {
         super(app);
         setVisible(false);
-        task = BTraceEngine.sharedInstance().createTask(app.getPid());
-        task.addCommandListener(logger);
+        task = engine.createTask(app.getPid());
+        task.addMessageDispatcher(new BTraceTask.MessageDispatcher() {
+            @Override
+            public void onPrintMessage(String message) {
+                getWriter().print(message);
+
+            }
+        });
+        task.addStateListener(new BTraceTask.StateListener() {
+
+            @Override
+            public void stateChanged(State state) {
+                switch (state) {
+                    case STARTING: {
+                        getWriter().println("* Starting BTrace task");
+                        break;
+                    }
+                    case COMPILING: {
+                        getWriter().println("** Compiling the BTrace script ...");
+                        getWriter().flush();
+                        break;
+                    }
+                    case FAILED: {
+                        getWriter().println("!!! Error occured");
+                        break;
+                    }
+                    case COMPILED: {
+                        getWriter().println("*** Compiled");
+                        break;
+                    }
+                    case INSTRUMENTING: {
+                        getWriter().println("** Instrumenting " + task.getInstrClasses() + " classes ...");
+                        break;
+                    }
+                    case RUNNING: {
+                        getWriter().println("*** Done");
+                        getWriter().println("** BTrace up&running\n");
+                        break;
+                    }
+                    case FINISHED: {
+                        getWriter().println("** BTrace has stopped");
+                        break;
+                    }
+                }
+            }
+        });
     }
 
     public BTraceTask getTask() {
@@ -81,7 +84,11 @@ public class BTraceTaskDS extends DataSource {
 
     public void setWriter(Writer writer) {
         writerRef.set((writer instanceof PrintWriter) ? (PrintWriter)writer : new PrintWriter(writer));
-        task.setWriter(writerRef.get());
+        BTraceOutputRegistry.getInstance().registerOuptut(task, writerRef.get());
+    }
+
+    private PrintWriter getWriter() {
+        return writerRef.get();
     }
 
     @Override

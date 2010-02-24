@@ -28,7 +28,6 @@ package net.java.btrace.visualvm.views;
 import com.sun.tools.visualvm.core.ui.DataSourceView;
 import com.sun.tools.visualvm.core.ui.DataSourceViewProvider;
 import com.sun.tools.visualvm.core.ui.DataSourceViewsManager;
-import net.java.btrace.visualvm.api.BTraceTask;
 import net.java.btrace.visualvm.datasources.BTraceTaskDS;
 
 /**

@@ -25,11 +25,11 @@
 
 package net.java.btrace.visualvm.views;
 
+import com.sun.btrace.api.BTraceTask;
 import com.sun.tools.visualvm.core.datasource.descriptor.DataSourceDescriptorFactory;
 import com.sun.tools.visualvm.core.ui.DataSourceView;
 import com.sun.tools.visualvm.core.ui.components.DataViewComponent;
 import javax.swing.JSplitPane;
-import net.java.btrace.visualvm.api.BTraceTask;
 import net.java.btrace.visualvm.datasources.BTraceTaskDS;
 import net.java.btrace.visualvm.views.classpath.BTraceClassPathPanel;
 import org.netbeans.api.progress.ProgressHandle;
@@ -83,7 +83,7 @@ public class BTraceTaskView extends DataSourceView {
                 } else if (state == BTraceTask.State.RUNNING) {
                     if (ph != null) ph.finish();
                     dvc.showDetailsArea(DataViewComponent.BOTTOM_LEFT);
-                } else if (state == BTraceTask.State.FINISHED) {
+                } else if (state.ordinal() >= BTraceTask.State.FINISHED.ordinal()) {
                     if (ph != null) ph.finish();
                 }
             }

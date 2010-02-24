@@ -29,7 +29,6 @@ import com.sun.tools.visualvm.core.datasource.DataSource;
 import com.sun.tools.visualvm.core.datasource.descriptor.DataSourceDescriptor;
 import com.sun.tools.visualvm.core.datasource.descriptor.DataSourceDescriptorFactory;
 import com.sun.tools.visualvm.core.model.AbstractModelProvider;
-import net.java.btrace.visualvm.api.BTraceTask;
 import net.java.btrace.visualvm.datasources.BTraceTaskDS;
 
 /**

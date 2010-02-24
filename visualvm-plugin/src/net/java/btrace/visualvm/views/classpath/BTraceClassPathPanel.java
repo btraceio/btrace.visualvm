@@ -11,13 +11,14 @@
 
 package net.java.btrace.visualvm.views.classpath;
 
+import com.sun.btrace.api.BTraceTask;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
-import net.java.btrace.visualvm.api.BTraceTask;
+import net.java.btrace.visualvm.api.BTraceClasspathProvider;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 
@@ -137,7 +138,7 @@ public class BTraceClassPathPanel extends javax.swing.JPanel {
         DefaultListModel model = (DefaultListModel)cpList.getModel();
         for (File f :jfc.getSelectedFiles()) {
             model.addElement(f.getAbsolutePath());
-            task.addCPEntry(f.getAbsolutePath());
+            BTraceClasspathProvider.getInstance().addCpEntry(task, f.getAbsolutePath());
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -152,7 +153,7 @@ public class BTraceClassPathPanel extends javax.swing.JPanel {
 
         for (File f :jfc.getSelectedFiles()) {
             model.addElement(f.getAbsolutePath());
-            task.addCPEntry(f.getAbsolutePath());
+            BTraceClasspathProvider.getInstance().addCpEntry(task, f.getAbsolutePath());
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -160,7 +161,7 @@ public class BTraceClassPathPanel extends javax.swing.JPanel {
         DefaultListModel model = (DefaultListModel)cpList.getModel();
         for(Object value : cpList.getSelectedValues()) {
             model.removeElement(value);
-            task.removeCPEntry((String)value);
+            BTraceClasspathProvider.getInstance().removeCpEntry(task, (String)value);
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -174,8 +175,8 @@ public class BTraceClassPathPanel extends javax.swing.JPanel {
             Object result = DialogDisplayer.getDefault().notify(dd);
             if (result == NotifyDescriptor.OK_OPTION) {
                 model.setElementAt(dd.getInputText(), selectedIndex);
-                task.removeCPEntry(editedValue);
-                task.addCPEntry(dd.getInputText());
+                BTraceClasspathProvider.getInstance().removeCpEntry(task, editedValue);
+                BTraceClasspathProvider.getInstance().addCpEntry(task, dd.getInputText());
             }
         }
     }//GEN-LAST:event_cpListMouseClicked

@@ -31,6 +31,8 @@
 
 package net.java.btrace.visualvm.views;
 
+import com.sun.btrace.api.BTraceTask;
+import com.sun.btrace.api.BTraceTask.StateListener;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -45,7 +47,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Properties;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -54,14 +55,14 @@ import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
+import net.java.btrace.visualvm.api.BTraceClasspathProvider;
 import net.java.btrace.visualvm.ui.components.EventChooser;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import net.java.btrace.visualvm.api.BTraceTask;
-import net.java.btrace.visualvm.api.BTraceTask.StateListener;
 import org.openide.util.Exceptions;
 import org.openide.util.NbPreferences;
+import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -149,6 +150,7 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
     public void stateChanged(BTraceTask.State state) {
         LOGGER.log(Level.FINEST, "BTrace task state changed to {0}", state);
         switch (state) {
+            case FAILED:
             case FINISHED:
             case NEW: {
                 btnStart.setEnabled(true);
@@ -351,11 +353,24 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
 }//GEN-LAST:event_btnEventActionPerformed
 
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
-        task.stop();
+        RequestProcessor.getDefault().post(new Runnable() {
+
+            @Override
+            public void run() {
+                task.stop();
+            }
+        });
 }//GEN-LAST:event_btnStopActionPerformed
 
     private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
-        task.start();
+        RequestProcessor.getDefault().post(new Runnable() {
+
+            @Override
+            public void run() {
+                task.start();
+            }
+       });
+
 }//GEN-LAST:event_btnStartActionPerformed
 
     private void saveScriptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveScriptActionPerformed
@@ -489,14 +504,7 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
 
         try {
             p.load(new InputStreamReader(new FileInputStream(metadata)));
-
-            String classPath = p.getProperty("class-path", "");
-            StringTokenizer st = new StringTokenizer(classPath, File.pathSeparator);
-            while (st.hasMoreTokens()) {
-                task.addCPEntry(st.nextToken());
-            }
-//            boolean unsafe = Boolean.parseBoolean(p.getProperty("unsafe", "false"));
-//            task.setUnsafe(unsafe);
+            BTraceClasspathProvider.getInstance().load(task, p);
         } catch (IOException iOException) {
             // ignore; simply don't add a custom classpath as it doesn't exist
         }
@@ -514,7 +522,7 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements StateLi
         Properties p = new Properties();
 
         try {
-            p.setProperty("class-path", task.getClassPath());
+            BTraceClasspathProvider.getInstance().save(task, p);
             p.setProperty("unsafe", Boolean.toString(task.isUnsafe()));
             
             p.store(new OutputStreamWriter(new FileOutputStream(metadata)), "BTrace metadata");
