@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 
 @BTrace(name="AWTStats") public class AWTTracer {
     // <fragment name="utilization">
+    private static long lastTimeStamp = -1L;
     private static long timeInEDT = 0;
     private static long timeInPaint = 0;
     private static long timeInLayout = 0;
@@ -16,13 +17,25 @@ import java.io.FileOutputStream;
     @Property volatile private static int paint = 0;
     @Property volatile private static int layout = 0;
 
+    @TLS private static int handlerDepth = 0;
+
+    @OnMethod(
+        clazz="java.awt.EventQueue",
+        method="dispatchEvent"
+    )
+    public static void onDispatchEnter() {
+        handlerDepth++;
+    }
+
     @OnMethod(
         clazz="java.awt.EventQueue",
         method="dispatchEvent",
         location=@Location(value=Kind.RETURN)
     )
-    public static void onDispatch(@Duration long time) {
-        timeInEDT += time;
+    public static void onDispatchExit(@Duration long time) {
+        if (--handlerDepth == 0) {
+            timeInEDT += time;
+        }
     }
 
     @OnMethod(
@@ -53,10 +66,17 @@ import java.io.FileOutputStream;
         timeInLayout = 0;
         timeInPaint = 0;
         timeInEDT = 0;
+        // </fragment>
+        long timeStamp = timeMillis();
+        long span = lastTimeStamp > -1 ? timeStamp - lastTimeStamp : 1000;
+        lastTimeStamp = timeStamp;
 
-        dispatch = (int)edt / 10000000; // 1000000000(as nanoseconds in 1 second) * 100(as %)
-        paint = (int)inPaint / 10000000;
-        layout = (int)inLayout / 10000000;
+        long divider = span * 1000L; // nanoseconds in 1 millisecond * 100 (as %)
+
+        // <fragment name="utilization">
+        dispatch = (int)(edt / divider);
+        paint = (int)(inPaint / divider);
+        layout = (int)(inLayout / divider);
         // </fragment>
     }
 }

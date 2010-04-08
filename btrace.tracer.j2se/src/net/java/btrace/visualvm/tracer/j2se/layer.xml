@@ -20,7 +20,7 @@
                                 </folder>
                             </folder>
                             <folder name="properties">
-                                <!-- <attr name="descriptorProvider" newvalue="net.java.btrace.visualvm.tracer.fx.impl.JavaFXItemDescriptorProvider"/> -->
+                                <attr name="descriptorProvider" methodvalue="net.java.btrace.visualvm.tracer.j2se.impl.DescriptorProviders.io"/>
                                 <file name="readRate">
                                     <attr name="displayName" bundlevalue="net.java.btrace.visualvm.tracer.j2se.Bundle#VisualVM/Tracer/j2se_io/probes/files/properties/readRate"/>
                                 </file>
@@ -42,7 +42,7 @@
                                 </folder>
                             </folder>
                             <folder name="properties">
-                                <!-- <attr name="descriptorProvider" newvalue="net.java.btrace.visualvm.tracer.fx.impl.JavaFXItemDescriptorProvider"/> -->
+                                <attr name="descriptorProvider" methodvalue="net.java.btrace.visualvm.tracer.j2se.impl.DescriptorProviders.io"/>
                                 <file name="nioReadRate">
                                     <attr name="displayName" bundlevalue="net.java.btrace.visualvm.tracer.j2se.Bundle#VisualVM/Tracer/j2se_io/probes/nio_buffers/properties/readRate"/>
                                 </file>
@@ -90,14 +90,17 @@
                                 </folder>
                             </folder>
                             <folder name="properties">
-                                <!-- <attr name="descriptorProvider" newvalue="net.java.btrace.visualvm.tracer.fx.impl.JavaFXItemDescriptorProvider"/> -->
+                                <attr name="descriptorProvider" methodvalue="net.java.btrace.visualvm.tracer.j2se.impl.DescriptorProviders.awt"/>
                                 <file name="dispatch">
+                                    <attr name="position" intvalue="10"/>
                                     <attr name="displayName" bundlevalue="net.java.btrace.visualvm.tracer.j2se.Bundle#VisualVM/Tracer/awt/probes/utilization/properties/dispatch"/>
                                 </file>
                                 <file name="paint">
+                                    <attr name="position" intvalue="20"/>
                                     <attr name="displayName" bundlevalue="net.java.btrace.visualvm.tracer.j2se.Bundle#VisualVM/Tracer/awt/probes/utilization/properties/paint"/>
                                 </file>
                                 <file name="layout">
+                                    <attr name="position" intvalue="30"/>
                                     <attr name="displayName" bundlevalue="net.java.btrace.visualvm.tracer.j2se.Bundle#VisualVM/Tracer/awt/probes/utilization/properties/layout"/>
                                 </file>
                             </folder>
