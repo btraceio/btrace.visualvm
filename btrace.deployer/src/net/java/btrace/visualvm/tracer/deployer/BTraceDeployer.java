@@ -114,17 +114,17 @@ final private static Logger LOGGER = Logger.getLogger(BTraceDeployer.class.getNa
                 StringBuilder sb = loadUrl(probeUrl);
                 String probeSrc = sb.toString();
 
+                Collection<String> fragments = entry.getValue();
                 Matcher m = FRAGMENT_PATTERN.matcher(probeSrc);
                 int offset = 0;
                 while (m.find()) {
-                    Collection<String> fragments = appFragments.get(probeUrl);
                     if ((fragments.size() == 1 && fragments.iterator().next().equals(ALL_FRAGMENTS)) || !fragments.contains(m.group(1))) {
                         sb.replace(m.start() - offset, m.end() - offset, ""); // NOI18N
                         offset += (m.end() - m.start());
                     }
                 }
                 probeSet.add(sb.toString());
-            }
+                    }
             final CountDownLatch latch = new CountDownLatch(probeSet.size());
             final float stepsPerProbe = (float)availableSteps / probeSet.size();
             final AtomicBoolean result = new AtomicBoolean(true);
