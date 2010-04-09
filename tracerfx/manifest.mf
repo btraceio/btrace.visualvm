@@ -1,5 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: com.sun.tools.visualvm.modules.tracer.javafx
+OpenIDE-Module-Layer: com/sun/tools/visualvm/modules/tracer/javafx/layer.xml
 OpenIDE-Module-Install: com/sun/tools/visualvm/modules/tracer/javafx/JavaFXPackageProvider.class
 OpenIDE-Module-Localizing-Bundle: com/sun/tools/visualvm/modules/tracer/javafx/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.0

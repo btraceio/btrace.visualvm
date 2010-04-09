@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="VisualVM">
+        <folder name="Tracer">
+            <folder name="packages">
+                <folder name="jfx">
+                    <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx"/>
+                    <folder name="probes">
+                        <folder name="metrics">
+                            <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/metrics"/>
+                            <attr name="position" intvalue="10"/>
+                            <attr name="desc" stringvalue="Monitors Invalidation Rate and Replacement Rate"/>
+                            <attr name="mbean" stringvalue="btrace:name=FxBtraceTracker"/>
+                            <folder name="deployment">
+                                <folder name="deployer.shadow">
+                                    <attr name="originalFile" stringvalue="VisualVM/Tracer/Deployer/BTrace"/>
+                                    <attr name="script" urlvalue="nbres:/com/sun/tools/visualvm/modules/tracer/javafx/resources/JavaFXTracer.probe"/>
+                                    <attr name="fragment" stringvalue="metrics"/>
+                                </folder>
+                            </folder>
+                            <folder name="properties">
+                                <file name="invalidationRate">
+                                    <attr name="desc" stringvalue="Monitors number of invalidations per second"/>
+                                    <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/metrics/properties/invalidationRate"/>
+                                </file>
+                                <file name="replacementRate">
+                                    <attr name="desc" stringvalue="Monitors number of replacements per second"/>
+                                    <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/metrics/properties/replacementRate"/>
+                                </file>
+                            </folder>
+                        </folder>
+                        <folder name="objects">
+                            <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/objects"/>
+                            <attr name="position" intvalue="20"/>
+                            <attr name="desc" stringvalue="Monitors Overall Rate and Hot Class Rate"/>
+                            <attr name="mbean" stringvalue="btrace:name=FxBtraceTracker"/>
+                            <folder name="deployment">
+                                <folder name="deployer.shadow">
+                                    <attr name="originalFile" stringvalue="VisualVM/Tracer/Deployer/BTrace"/>
+                                    <attr name="script" urlvalue="nbres:/com/sun/tools/visualvm/modules/tracer/javafx/resources/JavaFXTracer.probe"/>
+                                    <attr name="fragment" stringvalue="objects"/>
+                                </folder>
+                            </folder>
+                            <folder name="properties">
+                                <file name="fxObjectCreationRate">
+                                    <attr name="desc" stringvalue="Monitors number of created objects per second"/>
+                                    <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/objects/properties/fxObjectCreationRate"/>
+                                </file>
+                                <!--
+                                <file name="nioWriteRate">
+                                    <attr name="displayName" bundlevalue="net.java.btrace.visualvm.tracer.j2se.Bundle#VisualVM/Tracer/j2se_io/probes/nio_buffers/properties/writeRate"/>
+                                </file>
+                                -->
+                            </folder>
+                        </folder>
+                        <folder name="fps">
+                            <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/fps"/>
+                            <attr name="position" intvalue="30"/>
+                            <attr name="desc" stringvalue="Monitors average frame per second rate"/>
+                            <attr name="mbean" stringvalue="btrace:name=FxBtraceTracker"/>
+                            <folder name="deployment">
+                                <folder name="deployer.shadow">
+                                    <attr name="originalFile" stringvalue="VisualVM/Tracer/Deployer/BTrace"/>
+                                    <attr name="script" urlvalue="nbres:/com/sun/tools/visualvm/modules/tracer/javafx/resources/JavaFXTracer.probe"/>
+                                    <attr name="fragment" stringvalue="fps"/>
+                                </folder>
+                            </folder>
+                            <folder name="properties">
+                                <file name="averageFPS">
+                                    <attr name="desc" stringvalue="Monitors average frame per second rate"/>
+                                    <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/fps/properties/averageFPS"/>
+                                </file>
+                            </folder>
+                        </folder>
+                        <folder name="pulseCount">
+                            <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/pulseCount"/>
+                            <attr name="position" intvalue="40"/>
+                            <attr name="desc" stringvalue="Monitors mouse and keyboard activity"/>
+                            <attr name="mbean" stringvalue="btrace:name=FxBtraceTracker"/>
+                            <folder name="deployment">
+                                <folder name="deployer.shadow">
+                                    <attr name="originalFile" stringvalue="VisualVM/Tracer/Deployer/BTrace"/>
+                                    <attr name="script" urlvalue="nbres:/com/sun/tools/visualvm/modules/tracer/javafx/resources/JavaFXTracer.probe"/>
+                                    <attr name="fragment" stringvalue="pulseCount"/>
+                                </folder>
+                            </folder>
+                            <folder name="properties">
+                                <file name="mousePulses">
+                                    <attr name="desc" stringvalue="Monitors mouse activity"/>
+                                    <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/pulseCount/properties/mousePulses"/>
+                                </file>
+                                <file name="keyPulses">
+                                    <attr name="desc" stringvalue="Monitors keyboard activity"/>
+                                    <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/pulseCount/properties/keyPulses"/>
+                                </file>
+                            </folder>
+                        </folder>
+                        <folder name="pulseTiming">
+                            <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/pulseTiming"/>
+                            <attr name="position" intvalue="50"/>
+                            <attr name="desc" stringvalue="Monitors mouse and keyboard event timing"/>
+                            <attr name="mbean" stringvalue="btrace:name=FxBtraceTracker"/>
+                            <folder name="deployment">
+                                <folder name="deployer.shadow">
+                                    <attr name="originalFile" stringvalue="VisualVM/Tracer/Deployer/BTrace"/>
+                                    <attr name="script" urlvalue="nbres:/com/sun/tools/visualvm/modules/tracer/javafx/resources/JavaFXTracer.probe"/>
+                                    <attr name="fragment" stringvalue="pulseTiming"/>
+                                </folder>
+                            </folder>
+                            <folder name="properties">
+                                <file name="mousePulsesCumulativeTime">
+                                    <attr name="desc" stringvalue="Monitors mouse processing time"/>
+                                    <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/pulseTiming/properties/mousePulsesCumulativeTime"/>
+                                </file>
+                                <file name="keyPulsesCumulativeTime">
+                                    <attr name="desc" stringvalue="Monitors keyboard processing time"/>
+                                    <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/pulseTiming/properties/keyPulsesCumulativeTime"/>
+                                </file>
+                            </folder>
+                        </folder>
+                        <folder name="sgCss">
+                            <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/sgCss"/>
+                            <attr name="position" intvalue="80"/>
+                            <attr name="desc" stringvalue="Scenegraph CSS statistic"/>
+                            <attr name="mbean" stringvalue="btrace:name=FxBtraceTracker"/>
+                            <folder name="deployment">
+                                <folder name="deployer.shadow">
+                                    <attr name="originalFile" stringvalue="VisualVM/Tracer/Deployer/BTrace"/>
+                                    <attr name="script" urlvalue="nbres:/com/sun/tools/visualvm/modules/tracer/javafx/resources/JavaFXTracer.probe"/>
+                                    <attr name="fragment" stringvalue="sgCss"/>
+                                </folder>
+                            </folder>
+                            <folder name="properties">
+                                <file name="getStyleHelperCalls">
+                                    <attr name="position" intvalue="10"/>
+                                    <attr name="desc" stringvalue="Style helpers calls"/>
+                                    <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/sgCss/properties/getStyleHelperCalls"/>
+                                </file>
+                                <file name="styleHelperCount">
+                                    <attr name="position" intvalue="20"/>
+                                    <attr name="desc" stringvalue="Style helpers count"/>
+                                    <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/sgCss/properties/styleHelperCount"/>
+                                </file>
+                                <file name="transitionToStateCalls">
+                                    <attr name="position" intvalue="30"/>
+                                    <attr name="desc" stringvalue="Transitions"/>
+                                    <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/sgCss/properties/transitionToStateCalls"/>
+                                </file>
+                                <file name="processCssCount">
+                                    <attr name="position" intvalue="40"/>
+                                    <attr name="desc" stringvalue="CSS process calls"/>
+                                    <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/sgCss/properties/processCssCount"/>
+                                </file>
+                            </folder>
+                        </folder>
+                        <folder name="sgNode">
+                            <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/sgNode"/>
+                            <attr name="position" intvalue="70"/>
+                            <attr name="desc" stringvalue="Scenegraph nodes statistic"/>
+                            <attr name="mbean" stringvalue="btrace:name=FxBtraceTracker"/>
+                            <folder name="deployment">
+                                <folder name="deployer.shadow">
+                                    <attr name="originalFile" stringvalue="VisualVM/Tracer/Deployer/BTrace"/>
+                                    <attr name="script" urlvalue="nbres:/com/sun/tools/visualvm/modules/tracer/javafx/resources/JavaFXTracer.probe"/>
+                                    <attr name="fragment" stringvalue="sgNode"/>
+                                </folder>
+                            </folder>
+                            <folder name="properties">
+                                <file name="nodeCount">
+                                    <attr name="desc" stringvalue="Amount of nodes in sceengraph"/>
+                                    <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/sgNode/properties/nodeCount"/>
+                                </file>
+                                <file name="needsLayout">
+                                    <attr name="desc" stringvalue="How many nodes layout required"/>
+                                    <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/sgNode/properties/needsLayout"/>
+                                </file>
+                            </folder>
+                        </folder>
+                        <folder name="sgTiming">
+                            <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/sgTiming"/>
+                            <attr name="position" intvalue="60"/>
+                            <attr name="desc" stringvalue="Monitors scenegraph timing"/>
+                            <attr name="mbean" stringvalue="btrace:name=FxBtraceTracker"/>
+                            <folder name="deployment">
+                                <folder name="deployer.shadow">
+                                    <attr name="originalFile" stringvalue="VisualVM/Tracer/Deployer/BTrace"/>
+                                    <attr name="script" urlvalue="nbres:/com/sun/tools/visualvm/modules/tracer/javafx/resources/JavaFXTracer.probe"/>
+                                    <attr name="fragment" stringvalue="sgTiming"/>
+                                </folder>
+                            </folder>
+                            <folder name="properties">
+                                <file name="synchronizationTime">
+                                    <attr name="desc" stringvalue="Synchronization time"/>
+                                    <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/sgTiming/properties/synchronizationTime"/>
+                                </file>
+                                <file name="dirtyRegionsCumulativeTime">
+                                    <attr name="desc" stringvalue="Dirty regions processing time"/>
+                                    <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/sgTiming/properties/dirtyRegionsCumulativeTime"/>
+                                </file>
+                                <file name="paintCumulativeTime">
+                                    <attr name="desc" stringvalue="Paint processing time"/>
+                                    <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/sgTiming/properties/paintCumulativeTime"/>
+                                </file>
+                            </folder>
+                        </folder>
+                        <folder name="synCalls">
+                            <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/synCalls"/>
+                            <attr name="position" intvalue="90"/>
+                            <attr name="desc" stringvalue="Monitors amount of synchronization calls"/>
+                            <attr name="mbean" stringvalue="btrace:name=FxBtraceTracker"/>
+                            <folder name="deployment">
+                                <folder name="deployer.shadow">
+                                    <attr name="originalFile" stringvalue="VisualVM/Tracer/Deployer/BTrace"/>
+                                    <attr name="script" urlvalue="nbres:/com/sun/tools/visualvm/modules/tracer/javafx/resources/JavaFXTracer.probe"/>
+                                    <attr name="fragment" stringvalue="syncCalls"/>
+                                </folder>
+                            </folder>
+                            <folder name="properties">
+                                <file name="synchronizationCalls">
+                                    <attr name="desc" stringvalue="Monitors amount of synchronization calls"/>
+                                    <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/synCalls/properties/synchronizationTime"/>
+                                </file>
+                            </folder>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>
