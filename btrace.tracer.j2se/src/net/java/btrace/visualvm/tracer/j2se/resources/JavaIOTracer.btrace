@@ -1,10 +1,7 @@
-package fileio;
+package net.java.btrace.visualvm.tracer.j2se.resources;
 
 import com.sun.btrace.annotations.*;
 import static com.sun.btrace.BTraceUtils.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 
 @BTrace(name="JavaIOStats") public class JavaIOTracer {
     // <fragment name="files">
