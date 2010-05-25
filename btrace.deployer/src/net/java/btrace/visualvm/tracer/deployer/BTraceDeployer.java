@@ -79,6 +79,7 @@ final private static Logger LOGGER = Logger.getLogger(BTraceDeployer.class.getNa
         return Singleton.INSTANCE;
     }
 
+    @Override
     public void applyConfig(Application app, Config config) {
         URL url = ((BTraceConfig) config).script;
 
@@ -97,6 +98,7 @@ final private static Logger LOGGER = Logger.getLogger(BTraceDeployer.class.getNa
         }
     }
 
+    @Override
     public Config configFor(FileObject deployerCfg) {
         BTraceConfig bc = new BTraceConfig();
         bc.script = (URL)deployerCfg.getAttribute("script"); // NOI18N
@@ -105,6 +107,7 @@ final private static Logger LOGGER = Logger.getLogger(BTraceDeployer.class.getNa
         return bc;
     }
 
+    @Override
     public boolean deploy(Application app, final TracerProgressObject progress, int availableSteps) {
         if (deployedFlag.compareAndSet(false, true)) {
             Set<String> probeSet = new HashSet<String>();
@@ -130,12 +133,12 @@ final private static Logger LOGGER = Logger.getLogger(BTraceDeployer.class.getNa
             final AtomicBoolean result = new AtomicBoolean(true);
 
             for(String s : probeSet) {
-                System.err.println("Deploying:\n" + s);
                 final BTraceTask task = engine.createTask(app.getPid());
                 task.setScript(s);
                 task.addStateListener(new BTraceTask.StateListener() {
                     private BTraceTask.MessageDispatcher retrCounter = null;
 
+                    @Override
                     public void stateChanged(BTraceTask.State newState) {
                         switch (newState) {
                             case COMPILING: {
@@ -205,6 +208,7 @@ final private static Logger LOGGER = Logger.getLogger(BTraceDeployer.class.getNa
         return true;
     }
 
+    @Override
     public void undeploy(Application app) {
         if (deployedFlag.compareAndSet(true, false)) {
             Set<BTraceTask> undeploying  = null;
