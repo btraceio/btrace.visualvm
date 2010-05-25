@@ -6,6 +6,7 @@
             <folder name="packages">
                 <folder name="jfx">
                     <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx"/>
+                    <attr name="validator" methodvalue="com.sun.tools.visualvm.modules.tracer.javafx.impl.JFXValidator.getInstance"/>
                     <folder name="probes">
                         <folder name="metrics">
                             <attr name="displayName" bundlevalue="com.sun.tools.visualvm.modules.tracer.javafx.Bundle#VisualVM/Tracer/packages/jfx/probes/metrics"/>
