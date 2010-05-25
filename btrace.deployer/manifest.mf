@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
 OpenIDE-Module: net.java.btrace.visualvm.tracer.deployer
 OpenIDE-Module-Layer: net/java/btrace/visualvm/tracer/deployer/layer.xml
 OpenIDE-Module-Localizing-Bundle: net/java/btrace/visualvm/tracer/deployer/Bundle.properties
