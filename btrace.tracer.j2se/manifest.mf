@@ -3,5 +3,5 @@ OpenIDE-Module: net.java.btrace.visualvm.tracer.j2se
 OpenIDE-Module-Layer: net/java/btrace/visualvm/tracer/j2se/layer.xml
 OpenIDE-Module-Localizing-Bundle: net/java/btrace/visualvm/tracer/j2se/Bundle.properties
 OpenIDE-Module-Requires: com.sun.tools.visualvm.modules.tracer.dynamic
-OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Specification-Version: 1.0.1
 
