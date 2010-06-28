@@ -33,6 +33,7 @@ import com.sun.tools.visualvm.modules.tracer.dynamic.spi.DeployerImpl;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
@@ -53,15 +54,10 @@ import org.openide.filesystems.FileObject;
  */
 public class BTraceDeployer implements DeployerImpl {
 
-final private static Logger LOGGER = Logger.getLogger(BTraceDeployer.class.getName());
+    final private static Logger LOGGER = Logger.getLogger(BTraceDeployer.class.getName());
 
     final private static String ALL_FRAGMENTS = "<all>"; // NOI18N
     final private static Pattern FRAGMENT_PATTERN = Pattern.compile("//\\s*<fragment\\s+name\\s*=\\s*\"(.*?)\">(.*?)//\\s*</fragment>", Pattern.DOTALL | Pattern.MULTILINE);
-
-    private static class BTraceConfig implements Config {
-        private URL script;
-        private String fragment;
-    }
 
     private static class Singleton {
         final private static BTraceDeployer INSTANCE = new BTraceDeployer();
@@ -80,8 +76,23 @@ final private static Logger LOGGER = Logger.getLogger(BTraceDeployer.class.getNa
     }
 
     @Override
-    public void applyConfig(Application app, Config config) {
-        URL url = ((BTraceConfig) config).script;
+    public void applyConfig(Application app, Map<String, Object> config) {
+        Object urlObj = config.get("script");
+        if (urlObj == null) {
+            LOGGER.log(Level.WARNING, "BTrace deployment with no valid script file URL found");
+            return;
+        }
+        URL url = null;
+        if (urlObj instanceof URL) {
+            url = (URL)config.get("script");
+        } else {
+            try {
+                url = new URL(urlObj.toString());
+            } catch (MalformedURLException e) {
+                LOGGER.log(Level.WARNING, "Invalid URL", e);
+                return;
+            }
+        }
 
         synchronized(fragmentMap) {
             Map<URL, Collection<String>> appFragments = fragmentMap.get(app);
@@ -94,17 +105,8 @@ final private static Logger LOGGER = Logger.getLogger(BTraceDeployer.class.getNa
                 fragments = new HashSet<String>();
                 appFragments.put(url, fragments);
             }
-            fragments.add(((BTraceConfig) config).fragment);
+            fragments.add((String)config.get("fragment"));
         }
-    }
-
-    @Override
-    public Config configFor(FileObject deployerCfg) {
-        BTraceConfig bc = new BTraceConfig();
-        bc.script = (URL)deployerCfg.getAttribute("script"); // NOI18N
-        bc.fragment = (String)deployerCfg.getAttribute("fragment"); // NOI18N
-        bc.fragment = bc.fragment != null ? bc.fragment : ALL_FRAGMENTS;
-        return bc;
     }
 
     @Override
