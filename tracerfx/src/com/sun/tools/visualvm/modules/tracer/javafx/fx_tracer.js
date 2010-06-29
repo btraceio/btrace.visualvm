@@ -5,7 +5,7 @@ var loc = new L11N("com.sun.tools.visualvm.modules.tracer.javafx")
 var scriptPath = "nbres:/com/sun/tools/visualvm/modules/tracer/javafx/resources/JavaFXTracer.probe"
 var btraceDeployer = BTraceDeployer.instance()
 
-configure({
+VisualVM.Tracer.addPackages({
     // JavaFX Metrics package
     name: loc.getMessage("VisualVM/Tracer/packages/jfx"),
     validator: function() {

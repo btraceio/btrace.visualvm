@@ -46,7 +46,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -72,7 +71,7 @@ public class BTraceDeployer implements DeployerImpl {
     private BTraceDeployer() {}
 
     public static BTraceDeployer instance() {
-        return Singleton.INSTANCE;
+        return new BTraceDeployer(); //Singleton.INSTANCE;
     }
 
     @Override
