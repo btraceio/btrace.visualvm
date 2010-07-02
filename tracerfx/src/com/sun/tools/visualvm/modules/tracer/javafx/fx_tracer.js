@@ -7,7 +7,7 @@ var btraceDeployer = BTraceDeployer.instance()
 
 VisualVM.Tracer.addPackages({
     // JavaFX Metrics package
-    name: loc.getMessage("VisualVM/Tracer/packages/jfx"),
+    name: loc.message("VisualVM/Tracer/packages/jfx"),
     validator: function() {
         var jvm = Packages.com.sun.tools.visualvm.application.jvm.JvmFactory.getJVMFor(application);
         return jvm != undefined && jvm.getMainClass() == "com.sun.javafx.runtime.Main";
@@ -15,7 +15,7 @@ VisualVM.Tracer.addPackages({
     probes: [
         {
             // FX Metrics
-            name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/metrics"),
+            name: loc.message("VisualVM/Tracer/packages/jfx/probes/metrics"),
             desc: "Monitors Invalidation Rate and Replacement Rate",
             deployment: {
                 deployer: btraceDeployer,
@@ -25,13 +25,13 @@ VisualVM.Tracer.addPackages({
             properties: [
                 {
                     // invalidation rate
-                    name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/metrics/properties/invalidationRate"),
+                    name: loc.message("VisualVM/Tracer/packages/jfx/probes/metrics/properties/invalidationRate"),
                     desc: "Monitors number of invalidations per second",
                     value: mbeanAttribute("btrace:name=FxBtraceTracker", "invalidationRate")
                 },
                 {
                     // replacement rate
-                    name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/metrics/properties/replacementRate"),
+                    name: loc.message("VisualVM/Tracer/packages/jfx/probes/metrics/properties/replacementRate"),
                     desc: "Monitors number of replacements per second",
                     value: mbeanAttribute("btrace:name=FxBtraceTracker", "replacementRate")
                 }
@@ -39,7 +39,7 @@ VisualVM.Tracer.addPackages({
         },
         {
             // FX Objects
-            name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/objects"),
+            name: loc.message("VisualVM/Tracer/packages/jfx/probes/objects"),
             desc: "Monitors Overall Rate and Hot Class Rate",
             deployment: {
                 deployer: btraceDeployer,
@@ -49,7 +49,7 @@ VisualVM.Tracer.addPackages({
             properties: [
                 {
                     // Overall Rate
-                    name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/objects/properties/fxObjectCreationRate"),
+                    name: loc.message("VisualVM/Tracer/packages/jfx/probes/objects/properties/fxObjectCreationRate"),
                     desc: "Monitors the number of created objects per second",
                     value: mbeanAttribute("btrace:name=FxBtraceTracker", "fxObjectCreationRate")
                 }
@@ -57,7 +57,7 @@ VisualVM.Tracer.addPackages({
         },
         {
             // Average FPS
-            name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/fps"),
+            name: loc.message("VisualVM/Tracer/packages/jfx/probes/fps"),
             desc: "Monitors average frame per second rate",
             deployment: {
                 deployer: btraceDeployer,
@@ -67,7 +67,7 @@ VisualVM.Tracer.addPackages({
             properties: [
                 {
                     // Average FPS
-                    name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/fps/properties/averageFPS"),
+                    name: loc.message("VisualVM/Tracer/packages/jfx/probes/fps/properties/averageFPS"),
                     desc: "Monitors average frame per second rate",
                     value: mbeanAttribute("btrace:name=FxBtraceTracker", "averageFPS")
                 }
@@ -75,7 +75,7 @@ VisualVM.Tracer.addPackages({
         },
         {
             // Scenegraph mouse and key statistics
-            name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/pulseCount"),
+            name: loc.message("VisualVM/Tracer/packages/jfx/probes/pulseCount"),
             desc: "Monitors mouse and keyboard activity",
             deployment: {
                 deployer: btraceDeployer,
@@ -85,13 +85,13 @@ VisualVM.Tracer.addPackages({
             properties: [
                 {
                     // Key events
-                    name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/pulseCount/properties/keyPulses"),
+                    name: loc.message("VisualVM/Tracer/packages/jfx/probes/pulseCount/properties/keyPulses"),
                     desc: "Monitors keyboard activity",
                     value: mbeanAttribute("btrace:name=FxBtraceTracker", "keyPulses")
                 },
                 {
                     // Mouse events
-                    name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/pulseCount/properties/mousePulses"),
+                    name: loc.message("VisualVM/Tracer/packages/jfx/probes/pulseCount/properties/mousePulses"),
                     desc: "Monitors mouse activity",
                     value: mbeanAttribute("btrace:name=FxBtraceTracker", "mousePulses")
                 }
@@ -99,7 +99,7 @@ VisualVM.Tracer.addPackages({
         },
         {
             // Scenegraph mouse and key event timing
-            name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/pulseTiming"),
+            name: loc.message("VisualVM/Tracer/packages/jfx/probes/pulseTiming"),
             desc: "Monitors mouse and keyboard event timing",
             deployment: {
                 deployer: btraceDeployer,
@@ -109,13 +109,13 @@ VisualVM.Tracer.addPackages({
             properties: [
                 {
                     // Key events time
-                    name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/pulseTiming/properties/keyPulsesCumulativeTime"),
+                    name: loc.message("VisualVM/Tracer/packages/jfx/probes/pulseTiming/properties/keyPulsesCumulativeTime"),
                     desc: "Monitors keyboard processing time",
                     value: mbeanAttribute("btrace:name=FxBtraceTracker", "keyPulsesCumulativeTime")
                 },
                 {
                     // Mouse events time
-                    name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/pulseTiming/properties/mousePulsesCumulativeTime"),
+                    name: loc.message("VisualVM/Tracer/packages/jfx/probes/pulseTiming/properties/mousePulsesCumulativeTime"),
                     desc: "Monitors mouse processing time",
                     value: mbeanAttribute("btrace:name=FxBtraceTracker", "mousePulsesCumulativeTime")
                 }
@@ -123,7 +123,7 @@ VisualVM.Tracer.addPackages({
         },
         {
             // Scenegraph timing monitoring
-            name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/sgTiming"),
+            name: loc.message("VisualVM/Tracer/packages/jfx/probes/sgTiming"),
             desc: "Monitors scenegraph timing",
             deployment: {
                 deployer: btraceDeployer,
@@ -133,19 +133,19 @@ VisualVM.Tracer.addPackages({
             properties: [
                 {
                     // Dirty regions
-                    name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/sgTiming/properties/dirtyRegionsCumulativeTime"),
+                    name: loc.message("VisualVM/Tracer/packages/jfx/probes/sgTiming/properties/dirtyRegionsCumulativeTime"),
                     desc: "Dirty regions processing time",
                     value: mbeanAttribute("btrace:name=FxBtraceTracker", "dirtyRegionsCumulativeTime")
                 },
                 {
                     // Paint time
-                    name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/sgTiming/properties/paintCumulativeTime"),
+                    name: loc.message("VisualVM/Tracer/packages/jfx/probes/sgTiming/properties/paintCumulativeTime"),
                     desc: "Paint processing time",
                     value: mbeanAttribute("btrace:name=FxBtraceTracker", "paintCumulativeTime")
                 },
                 {
                     // Synchronization time
-                    name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/sgTiming/properties/synchronizationTime"),
+                    name: loc.message("VisualVM/Tracer/packages/jfx/probes/sgTiming/properties/synchronizationTime"),
                     desc: "Synchronization time",
                     value: mbeanAttribute("btrace:name=FxBtraceTracker", "synchronizationTime")
                 }
@@ -153,7 +153,7 @@ VisualVM.Tracer.addPackages({
         },
         {
             // Scenegraph nodes statistics
-            name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/sgNode"),
+            name: loc.message("VisualVM/Tracer/packages/jfx/probes/sgNode"),
             desc: "Scenegraph nodes statistic",
             deployment: {
                 deployer: btraceDeployer,
@@ -163,13 +163,13 @@ VisualVM.Tracer.addPackages({
             properties: [
                 {
                     // Layout required
-                    name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/sgNode/properties/needsLayout"),
+                    name: loc.message("VisualVM/Tracer/packages/jfx/probes/sgNode/properties/needsLayout"),
                     desc: "How many nodes layout required",
                     value: mbeanAttribute("btrace:name=FxBtraceTracker", "needsLayout")
                 },
                 {
                     // Node count
-                    name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/sgNode/properties/nodeCount"),
+                    name: loc.message("VisualVM/Tracer/packages/jfx/probes/sgNode/properties/nodeCount"),
                     desc: "Amount of nodes in sceengraph",
                     value: mbeanAttribute("btrace:name=FxBtraceTracker", "nodeCount")
                 }
@@ -177,7 +177,7 @@ VisualVM.Tracer.addPackages({
         },
         {
             // Scenegraph CSS statistics
-            name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/sgCss"),
+            name: loc.message("VisualVM/Tracer/packages/jfx/probes/sgCss"),
             desc: "Scenegraph CSS statistic",
             deployment: {
                 deployer: btraceDeployer,
@@ -187,25 +187,25 @@ VisualVM.Tracer.addPackages({
             properties: [
                 {
                     // Style helpers calls
-                    name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/sgCss/properties/getStyleHelperCalls"),
+                    name: loc.message("VisualVM/Tracer/packages/jfx/probes/sgCss/properties/getStyleHelperCalls"),
                     desc: "Style helpers calls",
                     value: mbeanAttribute("btrace:name=FxBtraceTracker", "getStyleHelperCalls")
                 },
                 {
                     // Style helpers count
-                    name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/sgCss/properties/styleHelperCount"),
+                    name: loc.message("VisualVM/Tracer/packages/jfx/probes/sgCss/properties/styleHelperCount"),
                     desc: "Style helpers count",
                     value: mbeanAttribute("btrace:name=FxBtraceTracker", "styleHelperCount")
                 },
                 {
                     // Style helpers count
-                    name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/sgCss/properties/transitionToStateCalls"),
+                    name: loc.message("VisualVM/Tracer/packages/jfx/probes/sgCss/properties/transitionToStateCalls"),
                     desc: "Transitions",
                     value: mbeanAttribute("btrace:name=FxBtraceTracker", "transitionToStateCalls")
                 },
                 {
                     // Style helpers count
-                    name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/sgCss/properties/processCssCount"),
+                    name: loc.message("VisualVM/Tracer/packages/jfx/probes/sgCss/properties/processCssCount"),
                     desc: "CSS process calls",
                     value: mbeanAttribute("btrace:name=FxBtraceTracker", "processCssCount")
                 }
@@ -213,7 +213,7 @@ VisualVM.Tracer.addPackages({
         },
         {
             // Synchronization calls
-            name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/synCalls"),
+            name: loc.message("VisualVM/Tracer/packages/jfx/probes/synCalls"),
             desc: "Monitors amount of synchronization calls",
             deployment: {
                 deployer: btraceDeployer,
@@ -223,7 +223,7 @@ VisualVM.Tracer.addPackages({
             properties: [
                 {
                     // Synchronization calls
-                    name: loc.getMessage("VisualVM/Tracer/packages/jfx/probes/synCalls/properties/synchronizationCalls"),
+                    name: loc.message("VisualVM/Tracer/packages/jfx/probes/synCalls/properties/synchronizationCalls"),
                     desc: "Monitors amount of synchronization calls",
                     value: mbeanAttribute("btrace:name=FxBtraceTracker", "synchronizationCalls")
                 }
