@@ -33,6 +33,7 @@ import com.sun.tools.visualvm.modules.tracer.dynamic.spi.DeployerImpl;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
@@ -45,7 +46,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -53,15 +53,10 @@ import org.openide.filesystems.FileObject;
  */
 public class BTraceDeployer implements DeployerImpl {
 
-final private static Logger LOGGER = Logger.getLogger(BTraceDeployer.class.getName());
+    final private static Logger LOGGER = Logger.getLogger(BTraceDeployer.class.getName());
 
     final private static String ALL_FRAGMENTS = "<all>"; // NOI18N
     final private static Pattern FRAGMENT_PATTERN = Pattern.compile("//\\s*<fragment\\s+name\\s*=\\s*\"(.*?)\">(.*?)//\\s*</fragment>", Pattern.DOTALL | Pattern.MULTILINE);
-
-    private static class BTraceConfig implements Config {
-        private URL script;
-        private String fragment;
-    }
 
     private static class Singleton {
         final private static BTraceDeployer INSTANCE = new BTraceDeployer();
@@ -76,11 +71,27 @@ final private static Logger LOGGER = Logger.getLogger(BTraceDeployer.class.getNa
     private BTraceDeployer() {}
 
     public static BTraceDeployer instance() {
-        return Singleton.INSTANCE;
+        return new BTraceDeployer(); //Singleton.INSTANCE;
     }
 
-    public void applyConfig(Application app, Config config) {
-        URL url = ((BTraceConfig) config).script;
+    @Override
+    public void applyConfig(Application app, Map<String, Object> config) {
+        Object urlObj = config.get("script");
+        if (urlObj == null) {
+            LOGGER.log(Level.WARNING, "BTrace deployment with no valid script file URL found");
+            return;
+        }
+        URL url = null;
+        if (urlObj instanceof URL) {
+            url = (URL)config.get("script");
+        } else {
+            try {
+                url = new URL(urlObj.toString());
+            } catch (MalformedURLException e) {
+                LOGGER.log(Level.WARNING, "Invalid URL", e);
+                return;
+            }
+        }
 
         synchronized(fragmentMap) {
             Map<URL, Collection<String>> appFragments = fragmentMap.get(app);
@@ -93,18 +104,11 @@ final private static Logger LOGGER = Logger.getLogger(BTraceDeployer.class.getNa
                 fragments = new HashSet<String>();
                 appFragments.put(url, fragments);
             }
-            fragments.add(((BTraceConfig) config).fragment);
+            fragments.add((String)config.get("fragment"));
         }
     }
 
-    public Config configFor(FileObject deployerCfg) {
-        BTraceConfig bc = new BTraceConfig();
-        bc.script = (URL)deployerCfg.getAttribute("script"); // NOI18N
-        bc.fragment = (String)deployerCfg.getAttribute("fragment"); // NOI18N
-        bc.fragment = bc.fragment != null ? bc.fragment : ALL_FRAGMENTS;
-        return bc;
-    }
-
+    @Override
     public boolean deploy(Application app, final TracerProgressObject progress, int availableSteps) {
         if (deployedFlag.compareAndSet(false, true)) {
             Set<String> probeSet = new HashSet<String>();
@@ -114,28 +118,28 @@ final private static Logger LOGGER = Logger.getLogger(BTraceDeployer.class.getNa
                 StringBuilder sb = loadUrl(probeUrl);
                 String probeSrc = sb.toString();
 
+                Collection<String> fragments = entry.getValue();
                 Matcher m = FRAGMENT_PATTERN.matcher(probeSrc);
                 int offset = 0;
                 while (m.find()) {
-                    Collection<String> fragments = appFragments.get(probeUrl);
                     if ((fragments.size() == 1 && fragments.iterator().next().equals(ALL_FRAGMENTS)) || !fragments.contains(m.group(1))) {
                         sb.replace(m.start() - offset, m.end() - offset, ""); // NOI18N
                         offset += (m.end() - m.start());
                     }
                 }
                 probeSet.add(sb.toString());
-            }
+                    }
             final CountDownLatch latch = new CountDownLatch(probeSet.size());
             final float stepsPerProbe = (float)availableSteps / probeSet.size();
             final AtomicBoolean result = new AtomicBoolean(true);
 
             for(String s : probeSet) {
-                System.err.println("Deploying:\n" + s);
                 final BTraceTask task = engine.createTask(app.getPid());
                 task.setScript(s);
                 task.addStateListener(new BTraceTask.StateListener() {
                     private BTraceTask.MessageDispatcher retrCounter = null;
 
+                    @Override
                     public void stateChanged(BTraceTask.State newState) {
                         switch (newState) {
                             case COMPILING: {
@@ -205,6 +209,7 @@ final private static Logger LOGGER = Logger.getLogger(BTraceDeployer.class.getNa
         return true;
     }
 
+    @Override
     public void undeploy(Application app) {
         if (deployedFlag.compareAndSet(true, false)) {
             Set<BTraceTask> undeploying  = null;

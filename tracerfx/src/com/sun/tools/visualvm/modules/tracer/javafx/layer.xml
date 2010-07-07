@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="VisualVM">
+        <folder name="Tracer">
+            <folder name="packages">
+                <file name="fx_tracer.js" url="fx_tracer.js"/>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>
