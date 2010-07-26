@@ -58,10 +58,6 @@ public class BTraceDeployer implements DeployerImpl {
     final private static String ALL_FRAGMENTS = "<all>"; // NOI18N
     final private static Pattern FRAGMENT_PATTERN = Pattern.compile("//\\s*<fragment\\s+name\\s*=\\s*\"(.*?)\">(.*?)//\\s*</fragment>", Pattern.DOTALL | Pattern.MULTILINE);
 
-    private static class Singleton {
-        final private static BTraceDeployer INSTANCE = new BTraceDeployer();
-    }
-
     final private BTraceEngine engine = BTraceEngine.newInstance();
 
     final private Map<Application, Map<URL, Collection<String>>> fragmentMap = new HashMap<Application, Map<URL, Collection<String>>>();
