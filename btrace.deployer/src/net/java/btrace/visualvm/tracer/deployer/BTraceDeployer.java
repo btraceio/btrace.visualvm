@@ -28,6 +28,8 @@ package net.java.btrace.visualvm.tracer.deployer;
 import com.sun.btrace.api.BTraceEngine;
 import com.sun.btrace.api.BTraceTask;
 import com.sun.tools.visualvm.application.Application;
+import com.sun.tools.visualvm.application.jvm.Jvm;
+import com.sun.tools.visualvm.application.jvm.JvmFactory;
 import com.sun.tools.visualvm.modules.tracer.TracerProgressObject;
 import com.sun.tools.visualvm.modules.tracer.dynamic.spi.DeployerImpl;
 import java.io.BufferedReader;
@@ -68,6 +70,13 @@ public class BTraceDeployer implements DeployerImpl {
 
     public static BTraceDeployer instance() {
         return new BTraceDeployer(); //Singleton.INSTANCE;
+    }
+
+    @Override
+    public boolean isApplicable(Application app) {
+        if (!app.isLocalApplication()) return false;
+        Jvm jvm = JvmFactory.getJVMFor(app);
+        return !(jvm.is14() || jvm.is15());
     }
 
     @Override
