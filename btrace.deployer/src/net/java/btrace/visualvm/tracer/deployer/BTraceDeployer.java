@@ -53,7 +53,7 @@ import java.util.regex.Pattern;
  *
  * @author Jaroslav Bachorik
  */
-public class BTraceDeployer implements DeployerImpl {
+public class BTraceDeployer extends DeployerImpl {
 
     final private static Logger LOGGER = Logger.getLogger(BTraceDeployer.class.getName());
 
