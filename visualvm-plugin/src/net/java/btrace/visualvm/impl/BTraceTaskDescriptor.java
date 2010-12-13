@@ -28,7 +28,7 @@ package net.java.btrace.visualvm.impl;
 import com.sun.tools.visualvm.core.datasource.descriptor.DataSourceDescriptor;
 import java.awt.Image;
 import net.java.btrace.visualvm.datasources.BTraceTaskDS;
-import org.openide.util.Utilities;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -41,7 +41,7 @@ public class BTraceTaskDescriptor extends DataSourceDescriptor<BTraceTaskDS> {
 
     @Override
     public Image getIcon() {
-        return Utilities.loadImage("net/java/btrace/api/btrace.png");
+        return ImageUtilities.loadImage("net/java/btrace/api/btrace.png");
     }
 
     @Override
