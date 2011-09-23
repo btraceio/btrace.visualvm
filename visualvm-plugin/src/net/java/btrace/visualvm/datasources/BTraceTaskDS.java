@@ -108,7 +108,7 @@ public class BTraceTaskDS extends DataSource {
                             if (printMethod != null) {
                                 StringWriter buffer = new StringWriter();
                                 PrintWriter writer = new PrintWriter(buffer);
-                                printMethod.invoke(dataRow, writer);
+                                printMethod.invoke(printRow[i], writer);
                                 writer.flush();
                                 printRow[i] = buffer.toString();
                                 continue;
