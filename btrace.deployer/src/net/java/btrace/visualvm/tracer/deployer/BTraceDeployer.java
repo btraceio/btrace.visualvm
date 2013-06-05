@@ -76,7 +76,7 @@ public class BTraceDeployer extends DeployerImpl {
     public boolean isApplicable(Application app) {
         if (!app.isLocalApplication()) return false;
         Jvm jvm = JvmFactory.getJVMFor(app);
-        return !(jvm.is14() || jvm.is15() || jvm.is17());
+        return !(jvm.is14() || jvm.is15());
     }
 
     @Override
