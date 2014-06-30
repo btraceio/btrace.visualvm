@@ -40,6 +40,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
+import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -48,14 +49,10 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service=ClasspathProvider.class)
 final public class BTraceClasspathProvider implements ClasspathProvider {
-    final private static class Singleton {
-        final private static BTraceClasspathProvider INSTANCE = new BTraceClasspathProvider();
-    }
-
     final private Map<WeakReference<BTraceTask>, Collection<String>> classpaths = new HashMap<WeakReference<BTraceTask>, Collection<String>>();
 
     final public static BTraceClasspathProvider getInstance() {
-        return Singleton.INSTANCE;
+        return Lookup.getDefault().lookup(BTraceClasspathProvider.class);
     }
 
     public void addCpEntry(BTraceTask btt, String cpEntry) {
@@ -123,7 +120,7 @@ final public class BTraceClasspathProvider implements ClasspathProvider {
         Properties props = getSystemProperties(btt);
         String userDir = props.getProperty("user.dir", null); // NOI18N
         String cp = props.getProperty("java.class.path", ""); // NOI18N
-        
+
         if (userDir != null) {
             paths.add(userDir);
         }
