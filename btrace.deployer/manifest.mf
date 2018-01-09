@@ -4,5 +4,5 @@ OpenIDE-Module: net.java.btrace.visualvm.tracer.deployer
 OpenIDE-Module-Layer: net/java/btrace/visualvm/tracer/deployer/layer.xml
 OpenIDE-Module-Localizing-Bundle: net/java/btrace/visualvm/tracer/deployer/Bundle.properties
 OpenIDE-Module-Provides: net.java.btrace.visualvm.tracer.deployer
-OpenIDE-Module-Specification-Version: 1.0.12
+OpenIDE-Module-Specification-Version: 1.0.13
 
