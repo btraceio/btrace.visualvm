@@ -25,7 +25,7 @@
 
 package net.java.btrace.visualvm.impl;
 
-import com.sun.tools.visualvm.core.datasource.descriptor.DataSourceDescriptor;
+import org.graalvm.visualvm.core.datasource.descriptor.DataSourceDescriptor;
 import java.awt.Image;
 import net.java.btrace.visualvm.datasources.BTraceTaskDS;
 import org.openide.util.ImageUtilities;

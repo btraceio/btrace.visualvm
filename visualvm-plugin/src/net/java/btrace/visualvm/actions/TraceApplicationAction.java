@@ -4,11 +4,11 @@
  */
 package net.java.btrace.visualvm.actions;
 
-import com.sun.tools.visualvm.application.Application;
-import com.sun.tools.visualvm.application.jvm.Jvm;
-import com.sun.tools.visualvm.application.jvm.JvmFactory;
-import com.sun.tools.visualvm.core.ui.DataSourceWindowManager;
-import com.sun.tools.visualvm.core.ui.actions.SingleDataSourceAction;
+import org.graalvm.visualvm.application.Application;
+import org.graalvm.visualvm.application.jvm.Jvm;
+import org.graalvm.visualvm.application.jvm.JvmFactory;
+import org.graalvm.visualvm.core.ui.DataSourceWindowManager;
+import org.graalvm.visualvm.core.ui.actions.SingleDataSourceAction;
 import java.awt.event.ActionEvent;
 import java.util.Set;
 import net.java.btrace.visualvm.datasources.BTraceTaskDS;

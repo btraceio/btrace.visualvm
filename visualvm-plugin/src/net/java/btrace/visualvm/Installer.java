@@ -25,7 +25,7 @@
 package net.java.btrace.visualvm;
 
 
-import com.sun.tools.visualvm.application.views.ApplicationViewsSupport;
+import org.graalvm.visualvm.application.views.ApplicationViewsSupport;
 import net.java.btrace.visualvm.impl.BTraceTaskDescriptorProvider;
 import net.java.btrace.visualvm.views.BTraceOutputOverview;
 import net.java.btrace.visualvm.views.BTraceTaskViewProvider;

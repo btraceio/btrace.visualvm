@@ -25,13 +25,13 @@
 
 package net.java.btrace.visualvm.views;
 
-import com.sun.tools.visualvm.application.Application;
-import com.sun.tools.visualvm.application.jvm.Jvm;
-import com.sun.tools.visualvm.application.jvm.JvmFactory;
-import com.sun.tools.visualvm.core.ui.DataSourceViewPlugin;
-import com.sun.tools.visualvm.core.ui.DataSourceViewPluginProvider;
-import com.sun.tools.visualvm.core.ui.components.DataViewComponent;
-import com.sun.tools.visualvm.core.ui.components.DataViewComponent.DetailsView;
+import org.graalvm.visualvm.application.Application;
+import org.graalvm.visualvm.application.jvm.Jvm;
+import org.graalvm.visualvm.application.jvm.JvmFactory;
+import org.graalvm.visualvm.core.ui.DataSourceViewPlugin;
+import org.graalvm.visualvm.core.ui.DataSourceViewPluginProvider;
+import org.graalvm.visualvm.core.ui.components.DataViewComponent;
+import org.graalvm.visualvm.core.ui.components.DataViewComponent.DetailsView;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;

@@ -27,10 +27,10 @@ package net.java.btrace.visualvm.api;
 
 import com.sun.btrace.api.BTraceTask;
 import com.sun.btrace.spi.ClasspathProvider;
-import com.sun.tools.visualvm.application.Application;
-import com.sun.tools.visualvm.application.jvm.Jvm;
-import com.sun.tools.visualvm.application.jvm.JvmFactory;
-import com.sun.tools.visualvm.core.datasource.DataSourceRepository;
+import org.graalvm.visualvm.application.Application;
+import org.graalvm.visualvm.application.jvm.Jvm;
+import org.graalvm.visualvm.application.jvm.JvmFactory;
+import org.graalvm.visualvm.core.datasource.DataSourceRepository;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.Collection;

@@ -27,11 +27,11 @@ package net.java.btrace.visualvm.tracer.deployer;
 
 import com.sun.btrace.api.BTraceEngine;
 import com.sun.btrace.api.BTraceTask;
-import com.sun.tools.visualvm.application.Application;
-import com.sun.tools.visualvm.application.jvm.Jvm;
-import com.sun.tools.visualvm.application.jvm.JvmFactory;
-import com.sun.tools.visualvm.modules.tracer.TracerProgressObject;
-import com.sun.tools.visualvm.modules.tracer.dynamic.spi.DeployerImpl;
+import org.graalvm.visualvm.application.Application;
+import org.graalvm.visualvm.application.jvm.Jvm;
+import org.graalvm.visualvm.application.jvm.JvmFactory;
+import org.graalvm.visualvm.modules.tracer.TracerProgressObject;
+import org.graalvm.visualvm.modules.tracer.dynamic.spi.DeployerImpl;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

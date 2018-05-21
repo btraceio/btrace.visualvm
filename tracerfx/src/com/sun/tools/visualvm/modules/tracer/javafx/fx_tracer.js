@@ -1,15 +1,15 @@
 importPackage(net.java.btrace.visualvm.tracer.deployer);
 
-var loc = new L11N("com.sun.tools.visualvm.modules.tracer.javafx")
+var loc = new L11N("org.graalvm.visualvm.modules.tracer.javafx")
 
-var scriptPath = "nbres:/com/sun/tools/visualvm/modules/tracer/javafx/resources/JavaFXTracer.probe"
+var scriptPath = "nbres:/org/graalvm/visualvm/modules/tracer/javafx/resources/JavaFXTracer.probe"
 var btraceDeployer = BTraceDeployer.instance()
 
 VisualVM.Tracer.addPackages({
     // JavaFX Metrics package
     name: loc.message("VisualVM/Tracer/packages/jfx"),
     validator: function() {
-        var jvm = Packages.com.sun.tools.visualvm.application.jvm.JvmFactory.getJVMFor(application);
+        var jvm = Packages.org.graalvm.visualvm.application.jvm.JvmFactory.getJVMFor(application);
         return jvm != undefined && jvm.getMainClass() == "com.sun.javafx.runtime.Main";
     },
     probes: [

@@ -26,9 +26,9 @@
 package net.java.btrace.visualvm.views;
 
 import com.sun.btrace.api.BTraceTask;
-import com.sun.tools.visualvm.core.datasource.descriptor.DataSourceDescriptorFactory;
-import com.sun.tools.visualvm.core.ui.DataSourceView;
-import com.sun.tools.visualvm.core.ui.components.DataViewComponent;
+import org.graalvm.visualvm.core.datasource.descriptor.DataSourceDescriptorFactory;
+import org.graalvm.visualvm.core.ui.DataSourceView;
+import org.graalvm.visualvm.core.ui.components.DataViewComponent;
 import javax.swing.JSplitPane;
 import net.java.btrace.visualvm.datasources.BTraceTaskDS;
 import net.java.btrace.visualvm.views.classpath.BTraceClassPathPanel;
