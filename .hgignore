@@ -1,7 +1,0 @@
-(^|/)\.hg($|/)
-(^|/)\.hgtags($|/)
-(^|/)build($|/)
-(^|/)javadoc($|/)
-(^|/)private($|/)
-(^|/)release($|/)
-(^|/)cluster.extra($|/)

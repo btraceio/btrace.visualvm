@@ -3,7 +3,7 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
-            <code-name-base>net.java.btrace.visualvm.api</code-name-base>
+            <code-name-base>org.openjdk.btrace.visualvm.api</code-name-base>
             <suite-component/>
             <module-dependencies>
                 <dependency>
@@ -11,8 +11,8 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>0-1</release-version>
-                        <specification-version>1.2</specification-version>
+                        <release-version>2</release-version>
+                        <specification-version>2.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -20,17 +20,25 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>0-1</release-version>
-                        <specification-version>1.3</specification-version>
+                        <release-version>2</release-version>
+                        <specification-version>2.2</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>net.java.btrace.api</code-name-base>
+                    <code-name-base>org.netbeans.modules.options.api</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>0</release-version>
-                        <specification-version>1.3.8.3</specification-version>
+                        <release-version>1</release-version>
+                        <specification-version>1.52</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.31.1.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -38,13 +46,37 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>8.34</specification-version>
+                        <specification-version>8.40</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util.ui</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>9.15</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>
             <public-packages>
-                <package>net.java.btrace.visualvm.api</package>
+                <package>org.openjdk.btrace.tooling.api</package>
+                <package>org.openjdk.btrace.tooling.spi</package>
+                <package>org.openjdk.btrace.visualvm.api</package>
+                <package>org.openjdk.btrace.visualvm.api.options</package>
+                <package>org.openjdk.btrace.visualvm.api.resources</package>
             </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/btrace-client.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/btrace-client.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/btrace-agent.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/btrace-agent.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/btrace-boot.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/btrace-boot.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>

@@ -5,4 +5,14 @@
 <project name="visualvm-plugin-suite" basedir=".">
     <description>Builds the module suite visualvm-plugin-suite.</description>
     <import file="nbproject/build-impl.xml"/>
+    
+    <target name="copy-to-cluster">
+        <copy todir="build/cluster/modules/ext">
+            <fileset dir="btrace.api.integration/release/modules/ext">
+                <include name="**/*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+    
+    <target name="-release.files" depends="copy-to-cluster"/>
 </project>
