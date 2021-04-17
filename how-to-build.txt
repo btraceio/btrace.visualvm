@@ -1,5 +1,5 @@
-In order to build this plugin you will need VisualVM 1.2.2 (or later) platform.
-You can get it from https://visualvm.java.net/download.html
+In order to build this plugin you will need VisualVM 1.4 (or later) platform.
+You can get it from https://visualvm.github.io/download.html
 
 Once you have it downloaded and unpacked on your harddrive you will need to
 add it as a platform in the NetBeans:
