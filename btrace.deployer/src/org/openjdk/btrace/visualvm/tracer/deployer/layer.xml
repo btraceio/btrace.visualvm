@@ -5,7 +5,7 @@
         <folder name="Tracer">
             <folder name="Deployer">
                 <file name="BTrace">
-                    <attr name="instance" methodvalue="net.java.btrace.visualvm.tracer.deployer.BTraceDeployer.instance"/>
+                    <attr name="instance" methodvalue="org.openjdk.btrace.visualvm.tracer.deployer.BTraceDeployer.instance"/>
                 </file>
             </folder>
         </folder>
