@@ -1,4 +1,4 @@
-In order to build this plugin you will need VisualVM 1.4 (or later) platform.
+In order to build this plugin you will need VisualVM 2.0 (or later) platform.
 You can get it from https://visualvm.github.io/download.html
 
 Once you have it downloaded and unpacked on your harddrive you will need to
