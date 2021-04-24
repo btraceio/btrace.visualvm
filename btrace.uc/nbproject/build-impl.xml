@@ -3,7 +3,7 @@
 *** GENERATED FROM project.xml - DO NOT EDIT  ***
 ***         EDIT ../build.xml INSTEAD         ***
 -->
-<project name="net.java.btrace.visualvm.uc-impl" basedir="..">
+<project name="org.openjdk.btrace.visualvm.uc-impl" basedir="..">
     <fail message="Please build using Ant 1.7.1 or higher.">
         <condition>
             <not>
