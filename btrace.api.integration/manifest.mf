@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.openjdk.btrace.visualvm.api
 OpenIDE-Module-Localizing-Bundle: org/openjdk/btrace/visualvm/api/Bundle.properties
-OpenIDE-Module-Specification-Version: 2.1.0
+OpenIDE-Module-Specification-Version: 2.2.0
 
