@@ -42,7 +42,7 @@ public class BTraceOptionsCategory extends OptionsCategory {
 
     @Override
     public Icon getIcon() {
-        return loadImageIcon("/org/openjdk/btrace/visualvm/api/resources/btrace.png", true); // NOI18N
+        return loadImageIcon("org/openjdk/btrace/visualvm/api/resources/btrace.png", true); // NOI18N
     }
 
     public OptionsPanelController create() {

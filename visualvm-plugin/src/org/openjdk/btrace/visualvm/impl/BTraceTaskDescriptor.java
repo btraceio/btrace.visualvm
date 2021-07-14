@@ -41,7 +41,7 @@ public class BTraceTaskDescriptor extends DataSourceDescriptor<BTraceTaskDS> {
 
     @Override
     public Image getIcon() {
-        return ImageUtilities.loadImage("/org/openjdk/btrace/visualvm/api/resources/btrace.png", true);
+        return ImageUtilities.loadImage("org/openjdk/btrace/visualvm/api/resources/btrace.png", true);
     }
 
     @Override
