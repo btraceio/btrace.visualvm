@@ -73,8 +73,8 @@ public class BTraceTaskEditorPanel extends javax.swing.JPanel implements BTraceT
     final private static String EDITOR_LAST_SCRIPT = "editor.lastOpened";
 
     final private static String SCRIPT_TEMPLATE = "/* BTrace Script Template */\n" +
-            "import com.sun.btrace.annotations.*;\n" +
-            "import static com.sun.btrace.BTraceUtils.*;\n\n" +
+            "import org.openjdk.btrace.core.annotations.*;\n" +
+            "import static org.openjdk.btrace.core.BTraceUtils.*;\n\n" +
             "@BTrace\n" +
             "public class TracingScript {\n" +
             "\t/* put your code here */\n" +

@@ -34,6 +34,12 @@ import org.openide.util.Lookup;
  *
  * @author Jaroslav Bachorik <jaroslav.bachorik@sun.com>
  */
+@OptionsPanelController.TopLevelRegistration(
+         id = "BTraceOptions",
+         categoryName = "#BTrace",
+         iconBase = "org/openjdk/btrace/visualvm/api/resources/btrace.png",
+         position = 7000
+)
 public class BTraceOptionsPanelController extends OptionsPanelController {
 
     private BTraceCustomizer panel;
