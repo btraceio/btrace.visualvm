@@ -2,10 +2,10 @@ Name: BTrace
 Description: BTrace: A safe, dynamic tracing tool for the Java platform
 License: GPLv2+CE
 Origin: https://github.com/btraceio/btrace
-Version: 2.2.0
-Files: btrace-agent-2.2.0.jar, btrace-boot-2.2.0.jar, btrace-client-2.2.0.jar.
+Version: 2.2.2
+Files: btrace-agent-2.2.2.jar, btrace-boot-2.2.2.jar, btrace-client-2.2.2.jar.
 
-Copyright (c) 2008, 2021, Oracle and/or its affiliates. All rights reserved.
+Copyright (c) 2008, 2022, Oracle and/or its affiliates. All rights reserved.
 
 GNU General Public License, version 2, with the Classpath Exception
 
