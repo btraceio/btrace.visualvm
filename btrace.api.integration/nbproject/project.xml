@@ -67,15 +67,15 @@
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/btrace-client.jar</runtime-relative-path>
-                <binary-origin>external/btrace-client-2.2.0.jar</binary-origin>
+                <binary-origin>external/btrace-client-2.2.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/btrace-agent.jar</runtime-relative-path>
-                <binary-origin>external/btrace-agent-2.2.0.jar</binary-origin>
+                <binary-origin>external/btrace-agent-2.2.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/btrace-boot.jar</runtime-relative-path>
-                <binary-origin>external/btrace-boot-2.2.0.jar</binary-origin>
+                <binary-origin>external/btrace-boot-2.2.2.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>
